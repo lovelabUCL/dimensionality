@@ -30,10 +30,10 @@ General pipeline:
 - If pre-whitening: load residuals as well
 - Mask both residuals and data using a wholebrain or ROI mask
 - For each searchlight/ROI:
-..+ whiten and mean-center data within the searchlight
-..+ run the nested cross-validation
-..+ average training data, get all possible low-dimensional reconstructions of the training data
-..+ correlate each low-dimensional reconstruction of the training data with the validation data
-..+ across all partitions into training and validation, identify which dimensionality "k" resulted in the highest average correlation between the reconstructed data and the validation data
-..+ average training and validation data, build k-dimensional reconstruction of the data and correlate with test-set
-..+ as each run serves as a test set once, the method returns one dimensionality estimate and correlation coefficient per run
+  + whiten and mean-center data within the searchlight
+  + run the nested cross-validation
+  + average training data, get all possible low-dimensional reconstructions of the training data
+  + correlate each low-dimensional reconstruction of the training data with the validation data
+  + across all partitions into training and validation, identify which dimensionality "k" resulted in the highest average correlation between the reconstructed data and the validation data
+  + average training and validation data, build k-dimensional reconstruction of the data and correlate with test-set
+  + as each run serves as a test set once, the method returns one dimensionality estimate and correlation coefficient per run
