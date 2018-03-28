@@ -3,6 +3,7 @@
 This set of functions allows you to estimate the functional dimensionality in a ROI or a searchlight.
 
 ## Requirements:
+
     * [SPM12](http://www.fil.ion.ucl.ac.uk/spm/software/spm12/)
     * [The RSA-toolbox](https://www.mrc-cbu.cam.ac.uk/methods-and-resources/toolboxes/)
     * [Matlab Stan](http://mc-stan.org/users/interfaces/matlab-stan) (only needed to run the hierarchical model)
