@@ -1,5 +1,5 @@
 #  Estimating the functional dimensionality of neural representations
-Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the functional dimensionality of neural representations](https://www.biorxiv.org/content/early/2018/03/29/232454). Biorxiv, DOI: [10.1101/232454](https://doi.org/10.1101/232454)
+Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the functional dimensionality of neural representations](https://www.biorxiv.org/content/early/2018/03/29/232454). bioRxiv, DOI: [10.1101/232454](https://doi.org/10.1101/232454)
 
 # MATLAB implementation
 
