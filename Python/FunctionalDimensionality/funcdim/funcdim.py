@@ -1,3 +1,4 @@
+
 """Copyright 2018, Giles Greenway & Christiane Ahlheim.
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -196,6 +197,7 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
     mean_bestn = np.zeros(mean_shape)
     mean_r_outer = np.zeros(mean_shape)
     mean_r_alter = np.zeros(mean_shape)
+    std_bestn = np.zeros(mean_shape)
     
     mean_axis = len(all_output_shape) - 2
     
@@ -203,9 +205,10 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
         mean_bestn[:,subject] = bestn_all[subject].mean(axis=mean_axis)
         mean_r_outer[:,subject] = r_outer_all[subject].mean(axis=mean_axis)
         mean_r_alter[:,subject] = r_alter_all[subject].mean(axis=mean_axis)
+        std_bestn[:,subject] = bestn_all[subject].std(axis=mean_axis)
     
-    results = {'bestn': mean_bestn, 'r_outer':mean_r_outer,
-        'r_alter':mean_r_alter}
+    results = {'bestn': mean_bestn, 'std_bestn':std_bestn,
+        'r_outer':mean_r_outer, 'r_alter':mean_r_alter}
             
     #  Determining statistical significance, defaults to TFCE.
     if sphere and test:
