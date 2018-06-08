@@ -49,10 +49,24 @@ def spm_beta_images(beta_files):
     for image in map(nib.load, beta_files):
         yield image
 
-def load_brain(spm_path,brain_shape, new_shape, n_betas, n_conditions, image_dtype):
-    brain = np.zeros(brain_shape, dtype=image_dtype)
+def load_brain(spm_path):
     spm = load_spm(spm_path)
+    
+    sess = spm['Sess'][0][0][0]
+    n_sessions = len(sess)
+    n_conditions = len(sess['U'][0][0][0])
+    
     beta_files = spm_beta_files(spm, spm_path)
+    n_betas = len(beta_files)
+    
+    image = spm_beta_images(beta_files).__next__()
+    image_size = np.product(image.shape)
+    image_dtype = image.get_data_dtype()
+    brain_shape = image.shape[:] + (n_betas,)
+    new_shape = (image_size, n_betas//n_sessions, n_sessions)
+    
+    brain = np.zeros(brain_shape, dtype=image_dtype)
+    
     for beta, image in enumerate(spm_beta_images(beta_files)):
         brain[:,:,:,beta] = image.get_data()
     return np.reshape(brain, new_shape)[:,0:n_conditions,:]
@@ -63,28 +77,7 @@ def brains_from_spm(subject_path):
     
     n_subjects = len(subject_dirs)
     
-    spm = load_spm(subject_spmpaths[0])
-    sess = spm['Sess'][0][0][0]
-    
-    n_sessions = len(sess)
-    n_conditions = len(sess['U'][0][0][0])
-    
-    beta_files = spm_beta_files(spm, subject_spmpaths[0])
-    n_betas = len(beta_files)
-    image = spm_beta_images(beta_files).__next__()
-    
-    image_shape = image.shape
-    image_size = np.product(image_shape)
-    
-    image_dtype = image.get_data_dtype()
-    brain_shape = image_shape[:] + (n_betas,)
-
-    new_shape = (image_size, n_betas//n_sessions, n_sessions)
-
-    def brain_loader(path):
-        return load_brain(path, brain_shape, new_shape, n_betas, n_conditions, image_dtype)
-
-    return n_subjects, map(brain_loader, subject_spmpaths)
+    return n_subjects, map(load_brain, subject_spmpaths)
 
 def load_mask(mask_file):
     return nib.load(mask_file).get_data() > 0
