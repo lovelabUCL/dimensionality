@@ -91,7 +91,7 @@ def run_searchlight(voxel_key, data, res, voxel_map, n_sessions):
     else:
         return tuple(3*[np.full(n_sessions, np.nan)])
        
-def searchlight_estimator(data, res, voxel_keys, voxel_map, n_voxels, n_sessions):
+def searchlight_estimator(data, res, voxel_keys, voxel_map, n_voxels):
     """
     arguments:
         data: Numpy array of shape n_voxels * n_conditions * n_subjects,
@@ -119,7 +119,7 @@ def searchlight_estimator(data, res, voxel_keys, voxel_map, n_voxels, n_sessions
         
     return {'bestn':bestn, 'r_outer':r_outer, 'r_alter':r_alter}
     
-def roi_estimator(data,res,n_sessions):
+def roi_estimator(data,res):
     if res == None:
         bestn, r_outer, r_alter = svd_nested_crossval(data)
     else:
@@ -146,9 +146,10 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
                 https://github.com/markallenthornton/MatlabTFCE
             Set this to "None" or False to ignore this step.
     """
+    
     iter_brain, first_brain = itertools.tee(wholebrain_all,2)
 
-    unmasked_voxels, n_conditions, n_sessions = first_brain.__next__().shape
+    unmasked_voxels, n_conditions, _ = first_brain.__next__().shape
 
     flat_mask = mask.ravel()
     
@@ -170,45 +171,47 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
         in the mask converted to bytes."""
         voxel_keys = [voxel.tobytes() for voxel in np.argwhere(mask)]
         n_voxels = len(voxel_keys)
-        all_output_shape = (n_subjects, n_voxels, n_sessions)
+        mean_axis = 1
         mean_shape = (n_voxels, n_subjects)
-        args = (brain + (voxel_keys, voxel_map, n_voxels, n_sessions)
+        args = (brain + (voxel_keys, voxel_map, n_voxels)
             for brain in zip(masked_brains, residuals))
     else:
         # ROI:
         estimator = roi_estimator
-        all_output_shape = (n_subjects, n_sessions)
+        mean_axis = 0
         mean_shape = (1,n_subjects)
-        args = (brain + (n_sessions,) for brain in zip(masked_brains, residuals))
+        args = (brain for brain in zip(masked_brains, residuals))
     
     estimator_pool = Pool()
     
     estimates = estimator_pool.starmap(estimator, args)
 
-    bestn_all = np.zeros(all_output_shape)
-    r_outer_all = np.zeros(all_output_shape)
-    r_alter_all = np.zeros(all_output_shape)
+    bestn_all = []
+    r_outer_all = []
+    r_alter_all = []
     
-    for subject, estimate in enumerate(estimates):
-        bestn_all[subject] = estimate['bestn']
-        r_outer_all[subject] = estimate['r_outer']
-        r_alter_all[subject] = estimate['r_alter']
+    for estimate in estimates:
+        bestn_all.append(estimate['bestn'])
+        r_outer_all.append(estimate['r_outer'])
+        r_alter_all.append(estimate['r_alter'])
         
     mean_bestn = np.zeros(mean_shape)
     mean_r_outer = np.zeros(mean_shape)
     mean_r_alter = np.zeros(mean_shape)
-    std_bestn = np.zeros(mean_shape)
-    
-    mean_axis = len(all_output_shape) - 2
+    if not sphere:
+        std_bestn = np.zeros(mean_shape)
     
     for subject in range(n_subjects):
         mean_bestn[:,subject] = bestn_all[subject].mean(axis=mean_axis)
         mean_r_outer[:,subject] = r_outer_all[subject].mean(axis=mean_axis)
         mean_r_alter[:,subject] = r_alter_all[subject].mean(axis=mean_axis)
-        std_bestn[:,subject] = bestn_all[subject].std(axis=mean_axis)
+        if not sphere:
+            std_bestn[:,subject] = bestn_all[subject].std(axis=mean_axis)
     
-    results = {'bestn': mean_bestn, 'std_bestn':std_bestn,
-        'r_outer':mean_r_outer, 'r_alter':mean_r_alter}
+    results = {'bestn': mean_bestn, 'r_outer':mean_r_outer, 'r_alter':mean_r_alter}
+    
+    if not sphere:
+        results['std_bestn'] = std_bestn
             
     #  Determining statistical significance, defaults to TFCE.
     if sphere and test:
