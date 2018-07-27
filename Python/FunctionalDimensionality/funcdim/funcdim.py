@@ -159,7 +159,7 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
     if res == None:
         residuals = (None for i in range(n_subjects))
     else:
-        residuals = (r[flat_mask] for r in res)
+        residuals = res
         
     if sphere:
         # Searchlight:
