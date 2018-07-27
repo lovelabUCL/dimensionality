@@ -35,7 +35,7 @@ def covdiag(x,df=None):
 
     t, n = x.shape
 
-    if not df:
+    if df is None:
         df = t - 1
     
     # De-mean returns.
@@ -47,13 +47,17 @@ def covdiag(x,df=None):
     prior = np.diag(np.diag(sample))
     
     # Compute shrinkage parameter using Ledoit-Wolf method. 
-    d = np.linalg.norm(sample - prior,ord='fro')**2 / n
+    d = 1.0/n*np.linalg.norm(sample - prior,ord='fro')**2
     y = x**2
     
-    r2 = (np.matmul(y.T,y).sum()/df**2 - (sample**2).sum()/df) / n
+    r2 = 1.0/(n*df**2)*np.matmul(y.T,y).sum() - 1.0/(n*df)*(sample**2).sum()
     
-    shrinkage = np.max([0,np.min([1.0,r2/d])])
+    r2_by_d = r2/d
+    if np.isnan(r2_by_d):
+        r2_by_d = 1.0
     
+    shrinkage = np.max([0,np.min([1.0,r2_by_d])])
+
     # Regularize the estimate.
     return shrinkage * prior + (1.0 - shrinkage) * sample
 
@@ -63,7 +67,7 @@ def pre_proc(data, res):
     for i_session in range(n_sessions):
         cov_e = covdiag(res[:,:,i_session].T)
         beta_norm[:,:,i_session] = np.matmul(data[:,:,i_session].T,
-            scipy.linalg.sqrtm(scipy.linalg.inv(cov_e))).T
+            scipy.linalg.fractional_matrix_power(cov_e,-0.5)).T
         
     return beta_norm - beta_norm.mean(axis=1).reshape(n_voxels, 1, n_sessions)
 
@@ -81,7 +85,7 @@ def run_searchlight(voxel_key, data, res, voxel_map, n_sessions):
     
     # Only perform cross-validation if sufficient voxels were returned...
     if len(indices) > 0:
-        if res == None:
+        if res is None:
             data_searchlight = data[indices,:,:]
         else:
             data_searchlight = pre_proc(data[indices,:,:], res[indices,:,:])
@@ -120,7 +124,7 @@ def searchlight_estimator(data, res, voxel_keys, voxel_map, n_voxels):
     return {'bestn':bestn, 'r_outer':r_outer, 'r_alter':r_alter}
     
 def roi_estimator(data,res):
-    if res == None:
+    if res is None:
         bestn, r_outer, r_alter = svd_nested_crossval(data)
     else:
         bestn, r_outer, r_alter = svd_nested_crossval(pre_proc(data, res))
@@ -156,7 +160,7 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
     # Iterate over sets of voxels that are active in the mask.  
     masked_brains = (brain[flat_mask] for brain in iter_brain)
     
-    if res == None:
+    if res is None:
         residuals = (None for i in range(n_subjects))
     else:
         residuals = res

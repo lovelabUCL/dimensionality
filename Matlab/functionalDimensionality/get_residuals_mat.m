@@ -1,4 +1,4 @@
-function VRes = get_residuals_mat(SPM,spm_path,Ic, mask)
+function VRes = get_residuals_mat(SPM,Ic, mask)
 %% “Copyright 2018, Christiane Ahlheim”
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
@@ -28,11 +28,6 @@ function VRes = get_residuals_mat(SPM,spm_path,Ic, mask)
 
 %-Get SPM.mat
 %--------------------------------------------------------------------------
-
-path_chunks = split(string(spm_path),'/');
-path_chunks(end) = [];
-file_path = char(join(path_chunks,'/'));
-
  if ~nargin || isempty(SPM)
      [SPM,sts] = spm_select(1,'^SPM\.mat$','Select SPM.mat');
      if ~sts, VRes = ''; return; end
@@ -49,14 +44,7 @@ if ~isstruct(SPM)
 end
 
 try, SPM.swd; catch, SPM.swd = pwd; end
-
-cwd = pwd;
-
-try
-    cd(SPM.swd);
-catch
-    cd(file_path);
-end
+cwd = pwd; cd(SPM.swd);
 
 %-Get contrast used to adjust data
 %--------------------------------------------------------------------------
@@ -119,25 +107,14 @@ for i=1:nbchunks
     %-Get mask
     %----------------------------------------------------------------------
     m = spm_data_read(mask,chunk) > 0;
-    try
-        cd(SPM.swd);
-    catch
-        cd(file_path);
-    end
-    
+    cd(SPM.swd);
     m = m(:)';
 
     %-Get raw data, whiten and filter
     %----------------------------------------------------------------------
     y = zeros(nScan,numel(chunk));
     for j=1:nScan
-        try
-            y(j,:) = spm_data_read(SPM.xY.VY(j),chunk);
-        catch
-            spmchunks = strsplit(SPM.xY.VY(j).fname,char(path_chunks(end)));
-            chunkfile = strcat(file_path,spmchunks(end));
-            y(j,:) = spm_data_read(chunkfile{1},chunk);
-        end
+        y(j,:) = spm_data_read(SPM.xY.VY(j),chunk);
     end
     y(:,~m) = [];
 
