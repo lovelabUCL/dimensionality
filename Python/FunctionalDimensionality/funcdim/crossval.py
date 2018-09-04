@@ -16,7 +16,6 @@ from scipy.stats import pearsonr
 
 def make_components(data):
     """Factorize an array of mean beta values over all sessions.
-    product(U, s_red, V.T) 
 
     arguments:
         data: n * m * o Numpy array of beta values for n voxels and m
