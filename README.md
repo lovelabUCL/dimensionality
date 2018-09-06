@@ -56,7 +56,7 @@ Currently, pre-whitening is implemented by passing in the full path to "SPM.mat"
 From within the ```FunctionalDimensionality``` directory, and preferably within a [Virtualenv](https://virtualenv.pypa.io/en/stable/), install as follows:
 
 ```
-python setup.py build sdist```
+python setup.py build sdist
 pip install .
 ```
 
