@@ -74,7 +74,7 @@ For searchlights, if a sphere radius is specified, the results are corrected by 
 # Demonstration
 
 A small (<6Mb) sub-set of the simulated data available at the [OSF](https://osf.io/tpq92/)) has
-been included in the ```demo_data``` directory. The file ```sim_data_sample.mat``` contains \beta values for
+been included in the ```demo_data``` directory. The file ```sim_data_sample.mat``` contains &beta; values for
 64 voxels over 16 conditions and 6 sessions for 10 repetitions, 2 subjects and 2 noise levels with nominal dimensionalities of 6, 8 and 12. The data is stored in the ```sample_sim_data``` array. (The full version has 100 repetitions, 20 subjects and 10 noise levels.) Scripts to demonstrate the ```svd_nested_crossval``` function are provided in Matlab and Python.
 
 ## Matlab
