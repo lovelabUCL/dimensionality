@@ -1,4 +1,4 @@
-This is a tool for estimating the dimensionality of neural data, as described in 
+This is a tool implemented in both Matlab and Python for estimating the dimensionality of neural data, as described in 
 **Estimating the functional dimensionality of neural representations**
 Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the functional dimensionality of neural representations](https://www.sciencedirect.com/science/article/pii/S1053811918305226). Neuroimage, DOI: [10.1016/j.neuroimage.2018.06.015](https://doi.org/10.1016/j.neuroimage.2018.06.015)
 
