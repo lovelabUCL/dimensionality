@@ -52,7 +52,7 @@ Currently, pre-whitening is implemented by passing in the full path to "SPM.mat"
 - [Numpy](http://www.numpy.org/)
 - [Scipy](https://www.scipy.org/)
 
-## Usage:
+## Installation:
 
 From within the ```FunctionalDimensionality``` directory, and preferably within a [Virtualenv](https://virtualenv.pypa.io/en/stable/), install as follows:
 
@@ -60,6 +60,8 @@ From within the ```FunctionalDimensionality``` directory, and preferably within 
 python setup.py build sdist
 pip install .
 ```
+
+## Usage:
 
 Within the Python interpreter:
 
