@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/home/augeas/Dev/Werk/dimensionality/Python/FunctionalDimensionality/bin/python
 """Copyright 2018, Giles Greenway & Christiane Ahlheim.
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import sys
 
 import numpy as np
-from scipy.io import loadmat
+from hdf5storage import loadmat
 
 from funcdim.crossval import svd_nested_crossval
 
@@ -24,7 +24,8 @@ def data_mesh(data):
     """Return an iterable of indices over all simulations, subjects,
     dimensions and noise-levels in the given Numpy array."""
     beta_mesh = np.meshgrid(*map(np.arange,data.shape[3:]))
-    yield from list(zip(*map(np.ravel,beta_mesh)))
+    for mesh_point in list(zip(*map(np.ravel,beta_mesh))):
+        yield mesh_point
     
     
 def run_crossval(data):
@@ -39,8 +40,8 @@ def run_crossval(data):
             voxels * stimuli * sessions * sims * subjects * dims * noise-levels""")
         return
 
-    print("""{} voxels, {} stimuli, {} sessions, {} sims,
-    {} subjects, {} dims, {} noise-levels""".format(*data.shape))
+    #print("""{} voxels, {} stimuli, {} sessions, {} sims,
+    #{} subjects, {} dims, {} noise-levels""".format(*data.shape))
     print()
 
     result_shape = (data.shape[2],) + data.shape[3:]
@@ -57,18 +58,18 @@ def run_crossval(data):
         all_router[:,rep,subject,dim,noise] = r_outer
         all_ralter[:,rep,subject,dim,noise] = r_alter
         
-    for dim in range(data.shape[5]):
-        print()
+    for i,dim in enumerate([4,8,12]):
+        print("ground-truth dimensionality: {:d}".format(dim))
         for noise in range(data.shape[6]):
             print(
                 """\tnoise-level: {:d},
                 mean best dimensionality: {:03.2f},
                 mean lowest correlation: {:03.2f},
                 mean highest correlation: {:03.2f}""".format(noise,
-                all_bestn[:,:,:,dim,noise].mean(),
-                all_router[:,:,:,dim,noise].mean(),
-                all_ralter[:,:,:,dim,noise].mean()))
-
+                all_bestn[:,:,:,i,noise].mean(),
+                all_router[:,:,:,i,noise].mean(),
+                all_ralter[:,:,:,i,noise].mean()))
+        print()
 
 
 if __name__ == "__main__":

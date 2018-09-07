@@ -41,8 +41,10 @@ for i = 1:sims
     all_ralter(d,:,r,s,n)=cv{3};
 end
 
+ground_truth = [4 8 12];
+
 for dim = 1:dimensions
-    disp(sprintf('');
+    disp(sprintf('ground-truth dimensionality: %d', ground_truth(dim)));
     for noise = 1:noise_levels
         disp(sprintf('\t noise-level: %d',noise));
         bestn = all_bestn(dim,:,:,:,noise);
