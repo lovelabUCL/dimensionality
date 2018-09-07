@@ -56,7 +56,7 @@ Currently, pre-whitening is implemented by passing in the full path to "SPM.mat"
 
 From within the ```FunctionalDimensionality``` directory, and preferably within a [Virtualenv](https://virtualenv.pypa.io/en/stable/), install as follows:
 
-```
+```python
 python setup.py build sdist
 pip install .
 ```
@@ -65,7 +65,9 @@ pip install .
 
 Within the Python interpreter:
 
-```from funcdim.funcdim import functional_dimensionality```
+```python
+from funcdim.funcdim import functional_dimensionality
+```
 
 The ```wholebrain_all``` data is passed in as an iterator of Numpy arrays of dimensions ```n_voxels``` x ```n_conditions``` x ```n_runs``` over ```n_subjects```, which may be a Numpy array of dimensions ```n_subjects``` x ```n_voxels``` x ```n_conditions``` x ```n_runs```. For pre-whitening, residuals may be passed in a similar format using the keyword argument ```res```. A mask should be passed in as a boolean Numpy array, which can be produced using [Nibabel](http://nipy.org/nibabel/).
 
