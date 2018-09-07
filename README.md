@@ -80,7 +80,7 @@ For searchlights, if a sphere radius is specified, the results are corrected by 
 
 A small (<6Mb) sub-set of the simulated data available at the [OSF](https://osf.io/tpq92/)) has
 been included in the ```demo_data``` directory. The file ```sim_data_sample.mat``` contains &beta; values for
-simulation with ground-truth dimensionalities of 4, 8, and 12 over 2 noise levels . The data is stored in the ```sample_sim_data``` array. (The full version is 2.5Gb, with 100 repetitions, 20 subjects and 10 noise levels.) Scripts to demonstrate the ```svd_nested_crossval``` function are provided in Matlab and Python. They return the mean best estimates of the dimensionalities for each noise level over all subjects and sessions. The mean correlations between data for each session and the highest and lowest dimensional reconstructions of all other sessions are also given.
+simulations with ground-truth dimensionalities of 4, 8, and 12 over 2 noise levels . The data is stored in the ```sample_sim_data``` array. (The full version is 2.5Gb, with 100 repetitions, 20 subjects and 10 noise levels.) Scripts to demonstrate the ```svd_nested_crossval``` function are provided in Matlab and Python. They return the mean best estimates of the dimensionalities for each noise level over all subjects and sessions. The mean correlations between data for each session and the highest and lowest dimensional reconstructions of all other sessions are also given.
 
 Here are the results for applying the method to the full simulated dataset as described in the [paper](https://www.sciencedirect.com/science/article/pii/S1053811918305226):
 (The full 100 repetitions over 20 subjects and 10 noise levels are used.)
