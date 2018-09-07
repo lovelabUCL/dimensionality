@@ -76,73 +76,75 @@ For searchlights, if a sphere radius is specified, the results are corrected by 
 
 A small (<6Mb) sub-set of the simulated data available at the [OSF](https://osf.io/tpq92/)) has
 been included in the ```demo_data``` directory. The file ```sim_data_sample.mat``` contains &beta; values for
-64 voxels over 16 conditions and 6 sessions for 10 repetitions, 2 subjects and 2 noise levels with nominal dimensionalities of 6, 8, and 12. The data is stored in the ```sample_sim_data``` array. (The full version has 100 repetitions, 20 subjects and 10 noise levels.) Scripts to demonstrate the ```svd_nested_crossval``` function are provided in Matlab and Python.
+64 voxels over 16 conditions and 6 sessions for 10 repetitions, 2 subjects and 2 noise levels with nominal dimensionalities of 6, 8, and 12. The data is stored in the ```sample_sim_data``` array. (The full version is 2.5Gb, with 100 repetitions, 20 subjects and 10 noise levels.) Scripts to demonstrate the ```svd_nested_crossval``` function are provided in Matlab and Python.
+They return the mean best estimates of the dimensionalities for each noise level over all subjects and sessions. The mean correlations
+between data for each session and the highest and lowest dimensional reconstructions of all other sessions are also given.
 
 ## Matlab
 
 ```
->> dimensionality_demo '/data/sim_data_sample.mat'   
+>> dimensionality_demo 'demo_data/sim_data_sample.mat'   
 dimension: 1
          noise-level: 1
                  mean best dimensionality: 5.666667
-                 mean best correlation: 0.182385
+                 mean lowest correlation: 0.182385
                  mean highest correlation: 0.159273
          noise-level: 2
                  mean best dimensionality: 7.233333
-                 mean best correlation: 0.105642
+                 mean lowest correlation: 0.105642
                  mean highest correlation: 0.100822
 dimension: 2
          noise-level: 1
                  mean best dimensionality: 9.566667
-                 mean best correlation: 0.133728
+                 mean lowest correlation: 0.133728
                  mean highest correlation: 0.136079
          noise-level: 2
                  mean best dimensionality: 10.666667
-                 mean best correlation: 0.104528
+                 mean lowest correlation: 0.104528
                  mean highest correlation: 0.109759
 dimension: 3
          noise-level: 1
                  mean best dimensionality: 12.566667
-                 mean best correlation: 0.126082
+                 mean lowest correlation: 0.126082
                  mean highest correlation: 0.130933
          noise-level: 2
                  mean best dimensionality: 12.775000
-                 mean best correlation: 0.116159
+                 mean lowest correlation: 0.116159
                  mean highest correlation: 0.121186
 ```
 
 ## Python
 
 ```
-dimensionality_demo.py /data/sim_data_sample.mat
+dimensionality_demo.py demo_data/sim_data_sample.mat
 64 voxels, 16 stimuli, 6 sessions, 10 sims,
     2 subjects, 3 dims, 2 noise-levels
 
 dimension: 0
         noise-level: 0,
                 mean best dimensionality: 5.67,
-                mean best correlation: 0.18,
+                mean lowest correlation: 0.18,
                 mean highest correlation: 0.16
         noise-level: 1,
                 mean best dimensionality: 7.23,
-                mean best correlation: 0.11,
+                mean lowest correlation: 0.11,
                 mean highest correlation: 0.10
 dimension: 1
         noise-level: 0,
                 mean best dimensionality: 9.57,
-                mean best correlation: 0.13,
+                mean lowest correlation: 0.13,
                 mean highest correlation: 0.14
         noise-level: 1,
                 mean best dimensionality: 10.67,
-                mean best correlation: 0.10,
+                mean lowest correlation: 0.10,
                 mean highest correlation: 0.11
 dimension: 2
         noise-level: 0,
                 mean best dimensionality: 12.57,
-                mean best correlation: 0.13,
+                mean lowest correlation: 0.13,
                 mean highest correlation: 0.13
         noise-level: 1,
                 mean best dimensionality: 12.78,
-                mean best correlation: 0.12,
+                mean lowest correlation: 0.12,
                 mean highest correlation: 0.12
 ```

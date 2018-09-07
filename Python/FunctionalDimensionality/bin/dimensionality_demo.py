@@ -63,7 +63,7 @@ def run_crossval(data):
             print(
                 """\tnoise-level: {:d},
                 mean best dimensionality: {:03.2f},
-                mean best correlation: {:03.2f},
+                mean lowest correlation: {:03.2f},
                 mean highest correlation: {:03.2f}""".format(noise,
                 all_bestn[:,:,:,dim,noise].mean(),
                 all_router[:,:,:,dim,noise].mean(),
