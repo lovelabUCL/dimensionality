@@ -42,7 +42,7 @@ for i = 1:sims
 end
 
 for dim = 1:dimensions
-    disp(sprintf('dimension: %d',dim));
+    disp(sprintf('');
     for noise = 1:noise_levels
         disp(sprintf('\t noise-level: %d',noise));
         bestn = all_bestn(dim,:,:,:,noise);
@@ -58,7 +58,7 @@ for dim = 1:dimensions
         mean_ralter = mean(flat_ralter);
         
         disp(sprintf('\t \t mean best dimensionality: %f',mean_bestn));
-        disp(sprintf('\t \t mean best correlation: %f',mean_router));
+        disp(sprintf('\t \t mean lowest correlation: %f',mean_router));
         disp(sprintf('\t \t mean highest correlation: %f',mean_ralter));
     end
 end

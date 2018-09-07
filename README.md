@@ -80,15 +80,27 @@ For searchlights, if a sphere radius is specified, the results are corrected by 
 
 A small (<6Mb) sub-set of the simulated data available at the [OSF](https://osf.io/tpq92/)) has
 been included in the ```demo_data``` directory. The file ```sim_data_sample.mat``` contains &beta; values for
-64 voxels over 16 conditions and 6 sessions for 10 repetitions, 2 subjects and 2 noise levels with nominal dimensionalities of 6, 8, and 12. The data is stored in the ```sample_sim_data``` array. (The full version is 2.5Gb, with 100 repetitions, 20 subjects and 10 noise levels.) Scripts to demonstrate the ```svd_nested_crossval``` function are provided in Matlab and Python.
+64 voxels over 16 conditions and 6 sessions for 10 repetitions, 2 subjects and 2 noise levels with nominal dimensionalities of 4, 8, and 12. The data is stored in the ```sample_sim_data``` array. (The full version is 2.5Gb, with 100 repetitions, 20 subjects and 10 noise levels.) Scripts to demonstrate the ```svd_nested_crossval``` function are provided in Matlab and Python.
 They return the mean best estimates of the dimensionalities for each noise level over all subjects and sessions. The mean correlations
 between data for each session and the highest and lowest dimensional reconstructions of all other sessions are also given.
+
+Here are the results for applying the method to the full simulated dataset as described in the [paper](https://www.sciencedirect.com/science/article/pii/S1053811918305226):
+(The full 100 repetitions over 20 subjects and 10 noise levels are used.)
+
+"A: Distributions of single-subject posterior dimensionality estimates for a ground-truth dimensionality of 4, 8, or 12 and increasing noise levels. As noise increases, the 
+estimates become less accurate and less certain, as indicated by the width of the distributions. For the highest noise level, the posterior distributions for all 
+ground-truth dimensionalities overlap largely.
+ 
+B: Average reconstruction correlations for the different ground-truth dimensionalities and increasing noise levels. As the noise level increases, reconstruction 
+correlations drop, and this effect is the same across the three different ground-truth dimensionalities."
+
+![fig 5 from the paper](https://raw.githubusercontent.com/lovelabUCL/dimensionality/staging/img/full_simulation_results.jpg)
 
 ## Matlab
 
 ```
 >> dimensionality_demo 'demo_data/sim_data_sample.mat'   
-dimension: 1
+
          noise-level: 1
                  mean best dimensionality: 5.666667
                  mean lowest correlation: 0.182385
@@ -97,7 +109,7 @@ dimension: 1
                  mean best dimensionality: 7.233333
                  mean lowest correlation: 0.105642
                  mean highest correlation: 0.100822
-dimension: 2
+
          noise-level: 1
                  mean best dimensionality: 9.566667
                  mean lowest correlation: 0.133728
@@ -106,7 +118,7 @@ dimension: 2
                  mean best dimensionality: 10.666667
                  mean lowest correlation: 0.104528
                  mean highest correlation: 0.109759
-dimension: 3
+
          noise-level: 1
                  mean best dimensionality: 12.566667
                  mean lowest correlation: 0.126082
@@ -124,7 +136,6 @@ dimensionality_demo.py demo_data/sim_data_sample.mat
 64 voxels, 16 stimuli, 6 sessions, 10 sims,
     2 subjects, 3 dims, 2 noise-levels
 
-dimension: 0
         noise-level: 0,
                 mean best dimensionality: 5.67,
                 mean lowest correlation: 0.18,
@@ -133,7 +144,7 @@ dimension: 0
                 mean best dimensionality: 7.23,
                 mean lowest correlation: 0.11,
                 mean highest correlation: 0.10
-dimension: 1
+
         noise-level: 0,
                 mean best dimensionality: 9.57,
                 mean lowest correlation: 0.13,
@@ -142,7 +153,7 @@ dimension: 1
                 mean best dimensionality: 10.67,
                 mean lowest correlation: 0.10,
                 mean highest correlation: 0.11
-dimension: 2
+
         noise-level: 0,
                 mean best dimensionality: 12.57,
                 mean lowest correlation: 0.13,

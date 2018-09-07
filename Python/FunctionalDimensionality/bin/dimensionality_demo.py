@@ -58,7 +58,7 @@ def run_crossval(data):
         all_ralter[:,rep,subject,dim,noise] = r_alter
         
     for dim in range(data.shape[5]):
-        print("dimension: {}".format(dim))
+        print()
         for noise in range(data.shape[6]):
             print(
                 """\tnoise-level: {:d},
