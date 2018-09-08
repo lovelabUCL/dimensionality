@@ -94,37 +94,24 @@ correlations drop, and this effect is the same across the three different ground
 
 ![fig 5 from the paper](https://raw.githubusercontent.com/lovelabUCL/dimensionality/staging/img/full_simulation_results.jpg)
 
-The following output from the demonstration scripts corresponds to the first two noise levels in the figure, for each ground-truth
-dimensionality of 4, 8 and 12.
+The following output from the demonstration scripts corresponds to the 2nd noise level in the figure, for each ground-truth
+dimensionality of 4, 8 and 12. Mean dimensionalities over all subjects and sessions are displayed. However the paper describes
+a superior approach where estimates are weighted according to their reliability using a multilevel Bayesian model implemented
+using [https://pystan.readthedocs.io/en/latest/](STAN). Individual p-values are generated for each subject.
 
 ## Matlab
 
 ```
 >> dimensionality_demo 'demo_data/sim_data_sample.mat'
 ground-truth dimensionality: 4
-         noise-level: 1
-                 mean best dimensionality: 4.162500
-                 mean lowest correlation: 0.271799
-                 mean highest correlation: 0.228741
-         noise-level: 2
                  mean best dimensionality: 4.779167
                  mean lowest correlation: 0.201328
                  mean highest correlation: 0.170237
 ground-truth dimensionality: 8
-         noise-level: 1
-                 mean best dimensionality: 8.795833
-                 mean lowest correlation: 0.241126
-                 mean highest correlation: 0.230273
-         noise-level: 2
                  mean best dimensionality: 9.483333
                  mean lowest correlation: 0.174794
                  mean highest correlation: 0.170913
 ground-truth dimensionality: 12
-         noise-level: 1
-                 mean best dimensionality: 12.375000
-                 mean lowest correlation: 0.182957
-                 mean highest correlation: 0.185597
-         noise-level: 2
                  mean best dimensionality: 11.795833
                  mean lowest correlation: 0.123619
                  mean highest correlation: 0.129265
@@ -136,31 +123,16 @@ ground-truth dimensionality: 12
 dimensionality_demo.py demo_data/sim_data_sample.mat
 
 ground-truth dimensionality: 4
-        noise-level: 0,
-                mean best dimensionality: 4.16,
-                mean lowest correlation: 0.27,
-                mean highest correlation: 0.23
-        noise-level: 1,
                 mean best dimensionality: 4.78,
                 mean lowest correlation: 0.20,
                 mean highest correlation: 0.17
 
 ground-truth dimensionality: 8
-        noise-level: 0,
-                mean best dimensionality: 8.80,
-                mean lowest correlation: 0.24,
-                mean highest correlation: 0.23
-        noise-level: 1,
                 mean best dimensionality: 9.48,
                 mean lowest correlation: 0.17,
                 mean highest correlation: 0.17
 
 ground-truth dimensionality: 12
-        noise-level: 0,
-                mean best dimensionality: 12.38,
-                mean lowest correlation: 0.18,
-                mean highest correlation: 0.19
-        noise-level: 1,
                 mean best dimensionality: 11.80,
                 mean lowest correlation: 0.12,
                 mean highest correlation: 0.13

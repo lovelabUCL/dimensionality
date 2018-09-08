@@ -46,7 +46,6 @@ ground_truth = [4 8 12];
 for dim = 1:dimensions
     disp(sprintf('ground-truth dimensionality: %d', ground_truth(dim)));
     for noise = 1:noise_levels
-        disp(sprintf('\t noise-level: %d',noise));
         bestn = all_bestn(dim,:,:,:,noise);
         router = all_router(dim,:,:,:,noise);
         ralter = all_ralter(dim,:,:,:,noise);

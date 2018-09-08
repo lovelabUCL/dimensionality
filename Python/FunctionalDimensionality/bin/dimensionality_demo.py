@@ -62,8 +62,7 @@ def run_crossval(data):
         print("ground-truth dimensionality: {:d}".format(dim))
         for noise in range(data.shape[6]):
             print(
-                """\tnoise-level: {:d},
-                mean best dimensionality: {:03.2f},
+                """mean best dimensionality: {:03.2f},
                 mean lowest correlation: {:03.2f},
                 mean highest correlation: {:03.2f}""".format(noise,
                 all_bestn[:,:,:,i,noise].mean(),
