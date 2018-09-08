@@ -97,7 +97,7 @@ correlations drop, and this effect is the same across the three different ground
 The following output from the demonstration scripts corresponds to the 2nd noise level in the figure, for each ground-truth
 dimensionality of 4, 8 and 12. Mean dimensionalities over all subjects and sessions are displayed. However the paper describes
 a superior approach where estimates are weighted according to their reliability using a multilevel Bayesian model implemented
-using [https://pystan.readthedocs.io/en/latest/](STAN). Individual p-values are generated for each subject.
+using [STAN](https://pystan.readthedocs.io/en/latest/). Individual p-values are generated for each subject.
 
 ## Matlab
 
