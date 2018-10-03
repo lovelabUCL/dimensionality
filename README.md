@@ -36,15 +36,16 @@ The user should:
 - Load data (beta estimates for each subject: voxel x conditions x sessions).
 - If pre-whitening: load residuals as well.
 - Mask both residuals and data using a wholebrain or ROI mask.
-The function will then:
-- For each searchlight/ROI:
-  + whiten and mean-center data within the searchlight;
-  + run the nested cross-validation;
-  + average training data, get all possible low-dimensional reconstructions of the training data;
-  + correlate each low-dimensional reconstruction of the training data with the validation data;
-  + across all partitions into training and validation, identify which dimensionality "k" resulted in the highest average correlation between the reconstructed data and the validation data;
-  + average training and validation data, build k-dimensional reconstruction of the data and correlate with test-set;
-  + as each run serves as a test set once, the method returns one dimensionality estimate and correlation coefficient per run.
+
+The function will then, for each searchlight/ROI:
+
++ whiten and mean-center data within the searchlight;
++ run the nested cross-validation;
++ average training data, get all possible low-dimensional reconstructions of the training data;
++ correlate each low-dimensional reconstruction of the training data with the validation data;
++ across all partitions into training and validation, identify which dimensionality "k" resulted in the highest average correlation between the reconstructed data and the validation data;
++ average training and validation data, build k-dimensional reconstruction of the data and correlate with test-set;
++ as each run serves as a test set once, the method returns one dimensionality estimate and correlation coefficient per run.
   
 ## Python implementation
 
@@ -72,12 +73,20 @@ from funcdim.funcdim import functional_dimensionality
 ```
 
 The function takes the arguments: wholebrain_all, n_subjects, mask, sphere=None, res=None, test.
-The ```wholebrain_all``` data is passed in as an iterator of Numpy arrays of dimensions ```n_voxels``` x ```n_conditions``` x ```n_runs``` over ```n_subjects```, which may be a Numpy array of dimensions ```n_subjects``` x ```n_voxels``` x ```n_conditions``` x ```n_runs```. For pre-whitening, residuals may be passed in a similar format using the keyword argument ```res```. A mask should be passed in as a boolean Numpy array, which can be produced using [Nibabel](http://nipy.org/nibabel/).
+The ```wholebrain_all``` data is passed in as an iterator of Numpy arrays of dimensions ```n_voxels``` x ```n_conditions``` x ```n_runs``` over ```n_subjects```, which may be a Numpy array of dimensions ```n_subjects``` x ```n_voxels``` x ```n_conditions``` x ```n_runs```. For pre-whitening, residuals may be passed in a similar format using the keyword argument ```res```. A mask should be passed in as a boolean Numpy array, which can be produced using [Nibabel](http://nipy.org/nibabel/). The results are returned in a dictionary with keys:
+
+- bestn, mean best dimensionality
+- r_outer, mean lowest correlation
+- r_alter, mean highest correlation
 
 #### Roi: ```functional_dimensionality(wholebrain_all, n_subjects, mask, res=None)``` 
 
+Each item in the dictionary will be an array with a single value for each subject, averaged over each session.
+
 #### Searchlight: ```functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=<sphere_radius>, test=tfce_onesample, res=None)```
 For searchlights, if a sphere radius is specified, the results are corrected by applying threshold free cluster enhancement ([TFCE](https://www.ncbi.nlm.nih.gov/pubmed/18501637)) by default using a limited implementation based on the [Matlab version](https://github.com/markallenthornton/MatlabTFCE) by Mark Allen Thornton. To bypass this, users may set the ```test``` keyword argument to ```None```, or pass in a function of their own. This should accept a Numpy array of dimensions ```x_voxels``` x ```y_voxels``` x ```z_voxels``` x ```n_images``` and return a single image as a Numpy array.
+
+Each item in the dictionary will be an array of voxel arrays, averaged over each session. 
 
 #### Demonstration:
 
@@ -94,7 +103,7 @@ data=sample_mat['sample_data']
 # "data" has the shape (64, 16, 6, 20)
 # It contains beta values for 64 voxels, 16 conditions, 6 sessions, 20 subjects.
 
-# Create a 4 * 4 * 4 mask (all True) for the 64 voxels.
+# Create a 4*4*4 mask (all True) for the 64 voxels.
 mask = np.ones((4,4,4), dtype='bool')
 
 # Create an iterator over the 20 subjects.
@@ -103,6 +112,19 @@ all_subjects = (data[:,:,:,i] for i in range(20))
 # Find the dimensionality.
 results = functional_dimensionality(all_subjects,20,mask)
 
+```
+
+The results should be:
+
+```python
+>>> results['bestn']
+ array([[4.16666667, 4.5       , 4.33333333, 4.66666667, 4.        ,
+        4.16666667, 6.        , 4.        , 4.        , 3.5       ,
+        5.83333333, 4.5       , 4.        , 7.        , 5.66666667,
+        4.        , 5.        , 4.        , 4.16666667, 3.33333333]])
+>>> results['bestn'].mean()
+4.541666666666667
+        
 ```
 
 
