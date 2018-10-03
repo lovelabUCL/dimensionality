@@ -1,14 +1,14 @@
+# Functional Dimensionality
+
 This is a tool implemented in both Matlab and Python for estimating the dimensionality of neural data, as described in 
 **Estimating the functional dimensionality of neural representations**
 Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the functional dimensionality of neural representations](https://www.sciencedirect.com/science/article/pii/S1053811918305226). Neuroimage, DOI: [10.1016/j.neuroimage.2018.06.015](https://doi.org/10.1016/j.neuroimage.2018.06.015)
 
-(Data is available at the [Open Science Framework](https://osf.io/tpq92/).)
-
-# MATLAB implementation
+## MATLAB implementation
 
 This set of functions allows you to estimate the functional dimensionality in a ROI or a searchlight.
 
-## Requirements:
+### Requirements:
 
 - [SPM12](http://www.fil.ion.ucl.ac.uk/spm/software/spm12/).
 - [The RSA-toolbox](https://www.mrc-cbu.cam.ac.uk/methods-and-resources/toolboxes/).
@@ -17,7 +17,7 @@ This set of functions allows you to estimate the functional dimensionality in a 
 - The ```covdiag``` function from [https://github.com/jooh/pilab](pilab) (shrinkage of the residual covariance matrix during pre-whitening).
 - TFCE correction can be run using FSL or with [MatlabTFCE](https://github.com/markallenthornton/MatlabTFCE).
 
-## Usage:    
+### Usage:    
     
 #### ROI: ```functional_dimensionality(wholebrain_all, mask)```
 
@@ -31,10 +31,12 @@ Currently, pre-whitening is implemented by passing in the full path to "SPM.mat"
 
 ```functional_dimensionality(wholebrain_all, '/path/to/mask', 'spmfile','/path/to/SPM.mat')```
 
-### General pipeline:
+#### General pipeline:
+The user should:
 - Load data (beta estimates for each subject: voxel x conditions x sessions).
 - If pre-whitening: load residuals as well.
 - Mask both residuals and data using a wholebrain or ROI mask.
+The function will then:
 - For each searchlight/ROI:
   + whiten and mean-center data within the searchlight;
   + run the nested cross-validation;
@@ -44,15 +46,15 @@ Currently, pre-whitening is implemented by passing in the full path to "SPM.mat"
   + average training and validation data, build k-dimensional reconstruction of the data and correlate with test-set;
   + as each run serves as a test set once, the method returns one dimensionality estimate and correlation coefficient per run.
   
-# Python implementation
+## Python implementation
 
-## Requirements:
+### Requirements:
 
 - [Nibabel](http://nipy.org/nibabel/)
 - [Numpy](http://www.numpy.org/)
 - [Scipy](https://www.scipy.org/)
 
-## Installation:
+### Installation:
 
 From within the ```FunctionalDimensionality``` directory, and preferably within a [Virtualenv](https://virtualenv.pypa.io/en/stable/), install as follows:
 
@@ -61,7 +63,7 @@ python setup.py build sdist
 pip install .
 ```
 
-## Usage:
+### Usage:
 
 Within the Python interpreter:
 
@@ -69,6 +71,7 @@ Within the Python interpreter:
 from funcdim.funcdim import functional_dimensionality
 ```
 
+The function takes the arguments: wholebrain_all, n_subjects, mask, sphere=None, res=None, test.
 The ```wholebrain_all``` data is passed in as an iterator of Numpy arrays of dimensions ```n_voxels``` x ```n_conditions``` x ```n_runs``` over ```n_subjects```, which may be a Numpy array of dimensions ```n_subjects``` x ```n_voxels``` x ```n_conditions``` x ```n_runs```. For pre-whitening, residuals may be passed in a similar format using the keyword argument ```res```. A mask should be passed in as a boolean Numpy array, which can be produced using [Nibabel](http://nipy.org/nibabel/).
 
 #### Roi: ```functional_dimensionality(wholebrain_all, n_subjects, mask, res=None)``` 
@@ -76,64 +79,31 @@ The ```wholebrain_all``` data is passed in as an iterator of Numpy arrays of dim
 #### Searchlight: ```functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=<sphere_radius>, test=tfce_onesample, res=None)```
 For searchlights, if a sphere radius is specified, the results are corrected by applying threshold free cluster enhancement ([TFCE](https://www.ncbi.nlm.nih.gov/pubmed/18501637)) by default using a limited implementation based on the [Matlab version](https://github.com/markallenthornton/MatlabTFCE) by Mark Allen Thornton. To bypass this, users may set the ```test``` keyword argument to ```None```, or pass in a function of their own. This should accept a Numpy array of dimensions ```x_voxels``` x ```y_voxels``` x ```z_voxels``` x ```n_images``` and return a single image as a Numpy array.
 
-# Demonstration
+#### Demonstration:
 
-A small (<6Mb) sub-set of the simulated data available at the [OSF](https://osf.io/tpq92/)) has
-been included in the ```demo_data``` directory. The file ```sim_data_sample.mat``` contains &beta; values for
-simulations with ground-truth dimensionalities of 4, 8, and 12 over 2 noise levels . The data is stored in the ```sample_sim_data``` array. (The full version is 2.5Gb, with 100 repetitions, 20 subjects and 10 noise levels.) Scripts to demonstrate the ```svd_nested_crossval``` function are provided in Matlab and Python. They return the mean best estimates of the dimensionalities for each noise level over all subjects and sessions. The mean correlations between data for each session and the highest and lowest dimensional reconstructions of all other sessions are also given.
+A small (<1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "demo_data" directory. This can be used as follows:
 
-Here are the results for applying the method to the full simulated dataset as described in the [paper](https://www.sciencedirect.com/science/article/pii/S1053811918305226):
-(The full 100 repetitions over 20 subjects and 10 noise levels are used.)
+```python
+import hdf5storage
+import numpy as np
+from funcdim.funcdim import functional_dimensionality
 
-"A: Distributions of single-subject posterior dimensionality estimates for a ground-truth dimensionality of 4, 8, or 12 and increasing noise levels. As noise increases, the 
-estimates become less accurate and less certain, as indicated by the width of the distributions. For the highest noise level, the posterior distributions for all 
-ground-truth dimensionalities overlap largely.
- 
-B: Average reconstruction correlations for the different ground-truth dimensionalities and increasing noise levels. As the noise level increases, reconstruction 
-correlations drop, and this effect is the same across the three different ground-truth dimensionalities."
+# load the sample data.
+sample_mat = hdf5storage.loadmat('demo_data/sample_data.mat')
+data=sample_mat['sample_data']
+# "data" has the shape (64, 16, 6, 20)
+# It contains beta values for 64 voxels, 16 conditions, 6 sessions, 20 subjects.
 
-![fig 5 from the paper](https://raw.githubusercontent.com/lovelabUCL/dimensionality/staging/img/full_simulation_results.jpg)
+# Create a 4 * 4 * 4 mask (all True) for the 64 voxels.
+mask = np.ones((4,4,4), dtype='bool')
 
-The following output from the demonstration scripts corresponds to the 2nd noise level in the figure, for each ground-truth
-dimensionality of 4, 8 and 12. Mean dimensionalities over all subjects and sessions are displayed. However the paper describes
-a superior approach where estimates are weighted according to their reliability using a multilevel Bayesian model implemented
-using [STAN](https://pystan.readthedocs.io/en/latest/). Individual p-values are generated for each subject.
+# Create an iterator over the 20 subjects.
+all_subjects = (data[:,:,:,i] for i in range(20))
 
-## Matlab
-
-```
->> dimensionality_demo 'demo_data/sim_data_sample.mat'
-ground-truth dimensionality: 4
-                 mean best dimensionality: 4.779167
-                 mean lowest correlation: 0.201328
-                 mean highest correlation: 0.170237
-ground-truth dimensionality: 8
-                 mean best dimensionality: 9.483333
-                 mean lowest correlation: 0.174794
-                 mean highest correlation: 0.170913
-ground-truth dimensionality: 12
-                 mean best dimensionality: 11.795833
-                 mean lowest correlation: 0.123619
-                 mean highest correlation: 0.129265
-```
-
-## Python
+# Find the dimensionality.
+results = functional_dimensionality(all_subjects,20,mask)
 
 ```
-dimensionality_demo.py demo_data/sim_data_sample.mat
 
-ground-truth dimensionality: 4
-                mean best dimensionality: 4.78,
-                mean lowest correlation: 0.20,
-                mean highest correlation: 0.17
 
-ground-truth dimensionality: 8
-                mean best dimensionality: 9.48,
-                mean lowest correlation: 0.17,
-                mean highest correlation: 0.17
 
-ground-truth dimensionality: 12
-                mean best dimensionality: 11.80,
-                mean lowest correlation: 0.12,
-                mean highest correlation: 0.13
-```

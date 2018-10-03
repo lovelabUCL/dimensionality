@@ -21,6 +21,5 @@ setup(
     author = 'Giles Richard Greenway',
     author_email = 'g.greenway@ucl.ac.uk',
     packages = ['funcdim'],
-    install_requires = ['nibabel','numpy','scipy','hdf5storage','six'],
-    scripts = ['bin/dimensionality_demo.py']
+    install_requires = ['nibabel','numpy','scipy','hdf5storage','six']
 )
