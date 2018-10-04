@@ -46,7 +46,47 @@ The function will then, for each searchlight/ROI:
 + across all partitions into training and validation, identify which dimensionality "k" resulted in the highest average correlation between the reconstructed data and the validation data;
 + average training and validation data, build k-dimensional reconstruction of the data and correlate with test-set;
 + as each run serves as a test set once, the method returns one dimensionality estimate and correlation coefficient per run.
-  
+
+#### Demonstration:
+
+A small (<1Mb) ammount of simulated data with nominal dimensionality 4 for 64 voxels and 6 sessions for 20 subjects is provided in the "demo_data" directory, along with a 4x4x4 mask with all voxels set to "true". This can be used as follows:
+
+```
+matfile = load('demo_data/sample_data.mat');
+[vox, cond, sessions, subjects] = size(matfile.sample_data);
+wholebrain_all = {};
+for i = 1:subjects                   
+    brain = matfile.sample_data(:,:,:,i);
+    wholebrain_all{i} = brain;
+end
+[mean_bestn,mean_r_outer_mean_r_alter,]=functional_dimensionality(wholebrain_all,'demo_data/sample_mask.img');
+
+```
+
+The results should be:
+
+```
+>> mean_bestn
+
+mean_bestn =
+
+  Columns 1 through 5
+
+    4.1667    4.5000    4.3333    4.6667    4.0000
+
+  Columns 6 through 10
+
+    4.1667    6.0000    4.0000    4.0000    3.5000
+
+  Columns 11 through 15
+
+    5.8333    4.5000    4.0000    7.0000    5.6667
+
+  Columns 16 through 20
+
+    4.0000    5.0000    4.0000    4.1667    3.3333
+```        
+
 ## Python implementation
 
 ### Requirements:
