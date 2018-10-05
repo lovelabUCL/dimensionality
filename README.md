@@ -47,9 +47,15 @@ The function will then, for each searchlight/ROI:
 + average training and validation data, build k-dimensional reconstruction of the data and correlate with test-set;
 + as each run serves as a test set once, the method returns one dimensionality estimate and correlation coefficient per run.
 
+The function returns:
+
+- mean_bestn, mean best dimensionality
+- mean_r_outer, mean lowest correlation
+- mean_r_alter, mean highest correlation    
+    
 #### Demonstration:
 
-A small (<1Mb) ammount of simulated data with nominal dimensionality 4 for 64 voxels and 6 sessions for 20 subjects is provided in the "demo_data" directory, along with a 4x4x4 mask with all voxels set to "true". This can be used as follows:
+A small (<1Mb) ammount of simulated data with nominal dimensionality 4 for 64 voxels and 6 sessions for 20 subjects is provided in the "Matlab/demo_data" directory, along with a 4x4x4 mask with all voxels set to "true". This can be used as follows:
 
 ```
 matfile = load('demo_data/sample_data.mat');
@@ -79,6 +85,7 @@ mean_bestn =
     4.1667    6.0000    4.0000    4.0000    3.5000
 
   Columns 11 through 15
+transmedialint_tml_models
 
     5.8333    4.5000    4.0000    7.0000    5.6667
 
@@ -97,12 +104,13 @@ mean_bestn =
 
 ### Installation:
 
-From within the ```FunctionalDimensionality``` directory, and preferably within a [Virtualenv](https://virtualenv.pypa.io/en/stable/), install as follows:
+From within the ```FunctionalDimensionality``` directory, and preferably within a [Virtualenv](https://virtualenv.pypa.io/en/stable/), one may install as follows:
 
 ```python
 python setup.py build sdist
 pip install .
 ```
+The 
 
 ### Usage:
 
@@ -111,6 +119,7 @@ Within the Python interpreter:
 ```python
 from funcdim.funcdim import functional_dimensionality
 ```
+One may also use 
 
 The function takes the arguments: wholebrain_all, n_subjects, mask, sphere=None, res=None, test.
 The ```wholebrain_all``` data is passed in as an iterator of Numpy arrays of dimensions ```n_voxels``` x ```n_conditions``` x ```n_runs``` over ```n_subjects```, which may be a Numpy array of dimensions ```n_subjects``` x ```n_voxels``` x ```n_conditions``` x ```n_runs```. For pre-whitening, residuals may be passed in a similar format using the keyword argument ```res```. A mask should be passed in as a boolean Numpy array, which can be produced using [Nibabel](http://nipy.org/nibabel/). The results are returned in a dictionary with keys:
@@ -130,14 +139,15 @@ Each item in the dictionary will be an array of voxel arrays, averaged over each
 
 #### Demonstration:
 
-A small (<1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "demo_data" directory. This can be used as follows:
+A small (<1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "Python/demo_data" directory. This can be used as follows:
+
 
 ```python
 import numpy as np
 from funcdim.funcdim import functional_dimensionality
 
 # load the sample data.
-data=np.load('sample_data.npy')
+data=np.load('demo_data/sample_data.npy')
 # "data" has the shape (64, 16, 6, 20)
 # It contains beta values for 64 voxels, 16 conditions, 6 sessions, 20 subjects.
 
@@ -165,5 +175,6 @@ The results should be:
         
 ```
 
+(or, just run the "demo.py" script from with the "Python/FunctionalDimensionality" directory.)
 
 
