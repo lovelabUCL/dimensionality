@@ -133,13 +133,11 @@ Each item in the dictionary will be an array of voxel arrays, averaged over each
 A small (<1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "demo_data" directory. This can be used as follows:
 
 ```python
-import hdf5storage
 import numpy as np
 from funcdim.funcdim import functional_dimensionality
 
 # load the sample data.
-sample_mat = hdf5storage.loadmat('demo_data/sample_data.mat')
-data=sample_mat['sample_data']
+data=np.load('sample_data.npy')
 # "data" has the shape (64, 16, 6, 20)
 # It contains beta values for 64 voxels, 16 conditions, 6 sessions, 20 subjects.
 
