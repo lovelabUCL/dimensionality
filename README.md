@@ -1,14 +1,36 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Functional Dimensionality](#functional-dimensionality)
+  - [MATLAB implementation](#matlab-implementation)
+    - [Requirements](#requirements)
+    - [Usage](#usage)
+      - [ROI](#roi)
+      - [Searchlight](#searchlight)
+      - [Demonstration](#demonstration)
+  - [Python implementation](#python-implementation)
+    - [Requirements](#requirements-1)
+    - [Installation](#installation)
+    - [Usage](#usage-1)
+      - [ROI](#roi-1)
+      - [Searchlight](#searchlight-1)
+      - [Demonstration](#demonstration-1)
+  - [General pipeline](#general-pipeline)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Functional Dimensionality
 
-This is a tool implemented in both Matlab and Python for estimating the dimensionality of neural data, as described in
+This is a method implemented in both Matlab and Python to estimate the functional dimensionality of (neural) data, as described in
 **Estimating the functional dimensionality of neural representations**
 Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the functional dimensionality of neural representations](https://www.sciencedirect.com/science/article/pii/S1053811918305226). Neuroimage, DOI: [10.1016/j.neuroimage.2018.06.015](https://doi.org/10.1016/j.neuroimage.2018.06.015)
 
 ## MATLAB implementation
 
-This set of functions allows you to estimate the functional dimensionality in a ROI or a searchlight.
+Estimate the functional dimensionality in a ROI or a searchlight in MATLAB.
 
-### Requirements:
+### Requirements
 
 - [SPM12](http://www.fil.ion.ucl.ac.uk/spm/software/spm12/).
 - [The RSA-toolbox](https://www.mrc-cbu.cam.ac.uk/methods-and-resources/toolboxes/).
@@ -17,11 +39,13 @@ This set of functions allows you to estimate the functional dimensionality in a 
 - The ```covdiag``` function from [https://github.com/jooh/pilab](pilab) (shrinkage of the residual covariance matrix during pre-whitening).
 - TFCE correction can be run using FSL or with [MatlabTFCE](https://github.com/markallenthornton/MatlabTFCE).
 
-### Usage:    
+### Usage    
 
-#### ROI: ```functional_dimensionality(wholebrain_all, mask)```
+#### ROI
+```functional_dimensionality(wholebrain_all, mask)```
 
-#### Searchlight: ```functional_dimensionality(wholebrain_all, mask, 'sphere',<sphere_radius>)```
+#### Searchlight
+```functional_dimensionality(wholebrain_all, mask, 'sphere',<sphere_radius>)```
 
 ```wholebrain_all```: Load your 1st level beta estimates as a cell of size ```n_subject```, each with a matrix of size ```n_voxel``` x ```n_conditions``` x ```n_runs```.
 
@@ -31,29 +55,7 @@ Currently, pre-whitening is implemented by passing in the full path to "SPM.mat"
 
 ```functional_dimensionality(wholebrain_all, '/path/to/mask', 'spmfile','/path/to/SPM.mat')```
 
-#### General pipeline:
-The user should:
-- Load data (beta estimates for each subject: voxel x conditions x sessions).
-- If pre-whitening: load residuals as well.
-- Mask both residuals and data using a wholebrain or ROI mask.
-
-The function will then, for each searchlight/ROI:
-
-+ whiten and mean-center data within the searchlight;
-+ run the nested cross-validation;
-+ average training data, get all possible low-dimensional reconstructions of the training data;
-+ correlate each low-dimensional reconstruction of the training data with the validation data;
-+ across all partitions into training and validation, identify which dimensionality "k" resulted in the highest average correlation between the reconstructed data and the validation data;
-+ average training and validation data, build k-dimensional reconstruction of the data and correlate with test-set;
-+ as each run serves as a test set once, the method returns one dimensionality estimate and correlation coefficient per run.
-
-The function returns:
-
-- mean_bestn, mean best dimensionality
-- mean_r_outer, mean lowest correlation
-- mean_r_alter, mean highest correlation    
-
-#### Demonstration:
+#### Demonstration
 
 A small (<1Mb) ammount of simulated data with nominal dimensionality 4 for 64 voxels and 6 sessions for 20 subjects is provided in the "Matlab/demo_data" directory, along with a 4x4x4 mask with all voxels set to "true". This can be used as follows:
 
@@ -96,13 +98,15 @@ transmedialint_tml_models
 
 ## Python implementation
 
-### Requirements:
+### Requirements
 
 - [Nibabel](http://nipy.org/nibabel/)
 - [Numpy](http://www.numpy.org/)
 - [Scipy](https://www.scipy.org/)
 
-### Installation:
+### Installation
+
+If you want to install this to use as a library please follow the instructions below, if you want to modify this code to use as a basis for your own method please clone the repository instead.
 
 From within the ```FunctionalDimensionality``` directory, and preferably within a [Virtualenv](https://virtualenv.pypa.io/en/stable/), one may install as follows:
 
@@ -112,14 +116,13 @@ pip install .
 ```
 The
 
-### Usage:
+### Usage
 
 Within the Python interpreter:
 
 ```python
 from funcdim.funcdim import functional_dimensionality
 ```
-One may also use
 
 The function takes the arguments: wholebrain_all, n_subjects, mask, sphere=None, res=None, test.
 The ```wholebrain_all``` data is passed in as an iterator of Numpy arrays of dimensions ```n_voxels``` x ```n_conditions``` x ```n_runs``` over ```n_subjects```, which may be a Numpy array of dimensions ```n_subjects``` x ```n_voxels``` x ```n_conditions``` x ```n_runs```. For pre-whitening, residuals may be passed in a similar format using the keyword argument ```res```. A mask should be passed in as a boolean Numpy array, which can be produced using [Nibabel](http://nipy.org/nibabel/). The results are returned in a dictionary with keys:
@@ -128,18 +131,21 @@ The ```wholebrain_all``` data is passed in as an iterator of Numpy arrays of dim
 - r_outer, mean lowest correlation
 - r_alter, mean highest correlation
 
-#### Roi: ```functional_dimensionality(wholebrain_all, n_subjects, mask, res=None)```
+#### ROI
+```functional_dimensionality(wholebrain_all, n_subjects, mask, res=None)```
 
 Each item in the dictionary will be an array with a single value for each subject, averaged over each session.
 
-#### Searchlight: ```functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=<sphere_radius>, test=tfce_onesample, res=None)```
+#### Searchlight
+```functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=<sphere_radius>, test=tfce_onesample, res=None)```
 For searchlights, if a sphere radius is specified, the results are corrected by applying threshold free cluster enhancement ([TFCE](https://www.ncbi.nlm.nih.gov/pubmed/18501637)) by default using a limited implementation based on the [Matlab version](https://github.com/markallenthornton/MatlabTFCE) by Mark Allen Thornton. To bypass this, users may set the ```test``` keyword argument to ```None```, or pass in a function of their own. This should accept a Numpy array of dimensions ```x_voxels``` x ```y_voxels``` x ```z_voxels``` x ```n_images``` and return a single image as a Numpy array.
 
 Each item in the dictionary will be an array of voxel arrays, averaged over each session.
 
-#### Demonstration:
+#### Demonstration
 
-A small (<1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "Python/demo_data" directory. This can be used as follows:
+A small (<1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "Python/demo_data" directory. This can be used as follows (or run the ```demo.py``` in ```Python/FunctionalDimensionality```):
+:
 
 
 ```python
@@ -163,7 +169,7 @@ results = functional_dimensionality(all_subjects, 20, mask)
 print(results)
 ```
 
-The results should be:
+The results should be (recall ```bestn``` is the mean best dimensionality):
 
 ```python
 >>> results['bestn']
@@ -176,4 +182,24 @@ The results should be:
 
 ```
 
-(or, just run the "demo.py" script from with the "Python/FunctionalDimensionality" directory.)
+## General pipeline
+The user should:
+- Load data (beta estimates for each subject: voxel x conditions x sessions).
+- If pre-whitening: load residuals as well.
+- Mask both residuals and data using a wholebrain or ROI mask.
+
+The function will then, for each searchlight/ROI:
+
++ whiten and mean-center data within the searchlight;
++ run the nested cross-validation;
++ average training data, get all possible low-dimensional reconstructions of the training data;
++ correlate each low-dimensional reconstruction of the training data with the validation data;
++ across all partitions into training and validation, identify which dimensionality "k" resulted in the highest average correlation between the reconstructed data and the validation data;
++ average training and validation data, build k-dimensional reconstruction of the data and correlate with test-set;
++ as each run serves as a test set once, the method returns one dimensionality estimate and correlation coefficient per run.
+
+The function returns:
+
+- mean_bestn, mean best dimensionality
+- mean_r_outer, mean lowest correlation
+- mean_r_alter, mean highest correlation    
