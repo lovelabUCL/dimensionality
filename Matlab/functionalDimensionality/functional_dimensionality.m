@@ -1,4 +1,4 @@
-function [bestn,r_outer, r_alter, test_tfce] = functional_dimensionality(wholebrain_all, mask, varargin)
+function [mean_bestn,mean_r_outer, mean_r_alter, test_tfce] = functional_dimensionality(wholebrain_all, mask, varargin)
 %% ???Copyright 2018, Christiane Ahlheim???
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
@@ -79,9 +79,9 @@ for i_subject = 1:n_subject
 end
 
 for i_subject = 1:n_subject
-    mean_r_outer(:, i_subject)= mean(r_outer_all{i_subject},1);
-    mean_r_alter(:, i_subject)= mean(r_alter_all{i_subject},1);
-    mean_bestn(:, i_subject)  = mean(bestn_all{i_subject},1);
+    mean_r_outer(:, i_subject) = mean(r_outer_all{i_subject},1);
+    mean_r_alter(:, i_subject) = mean(r_alter_all{i_subject},1);
+    mean_bestn(:, i_subject)   = mean(bestn_all{i_subject},1);
 end
 
 % Step 3: Determining statistical significance
@@ -93,10 +93,11 @@ if sphere > 0
         vol_tfce(logical(mask_subj)) = mean_r_outer;
         test_tfce = matlab_tfce('onesample',1,vol_tfce);
     catch
-        test_tfce = nan
+        test_tfce = nan;
     end
 else
-    test_tfce = nan
+    test_tfce = nan;
 end
+
 
 end
