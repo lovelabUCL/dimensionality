@@ -1,4 +1,4 @@
-function [mean_bestn,mean_r_outer, mean_r_alter, test_tfce] = functional_dimensionality(wholebrain_all, mask, varargin)
+function [bestn_all,r_outer_all, r_alter_all, test_tfce] = functional_dimensionality(wholebrain_all, mask, varargin)
 %% ???Copyright 2018, Christiane Ahlheim???
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
@@ -12,8 +12,8 @@ function [mean_bestn,mean_r_outer, mean_r_alter, test_tfce] = functional_dimensi
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 % Load betas into wholebrain_all; 
-% Set "sphere" to perform searchlight, else ROI.
-% Set "spmfile" to perform noise normalisation/prewhitening if desired
+% Set 'sphere' to perform searchlight, else ROI.
+% Set 'spmfile' to perform noise normalisation/prewhitening if desired
 % Residuals and beta estimates must not include any nans; mask with mask_mat
 
 % output:
@@ -32,13 +32,13 @@ sphere = preproc.Results.sphere;
 prewhiten = false;
 
 spm_path = preproc.Results.spmfile;
-if ~(spm_path == "")
+if ~(spm_path == '')
     try
         SPM_file = load(spm_path);
         SPM = SPM_file.SPM;
         prewhiten = true;
     catch
-        warning("Can't open the SPM file");
+        warning('Cant open the SPM file');
     end
 end
     
