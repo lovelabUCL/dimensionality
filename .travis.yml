@@ -6,6 +6,7 @@ python:
 sudo: enabled
 
 install:
+  - pip install codecov
   - pip install -r Python/FunctionalDimensionality/requirements.txt
 
 script:
