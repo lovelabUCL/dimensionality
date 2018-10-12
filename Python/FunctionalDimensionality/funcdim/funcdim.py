@@ -239,8 +239,10 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
         if not sphere:
             std_bestn[:, subject] = bestn_all[subject].std(axis=mean_axis)
 
-    results = {'bestn': mean_bestn,
-               'r_outer': mean_r_outer, 'r_alter': mean_r_alter}
+    # results = {'bestn': mean_bestn,
+               # 'r_outer': mean_r_outer, 'r_alter': mean_r_alter}
+
+    results = {'bestn': bestn_all,'r_outer': r_outer_all, 'r_alter': r_alter_all}
 
     if not sphere:
         results['std_bestn'] = std_bestn
