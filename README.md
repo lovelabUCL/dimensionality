@@ -22,6 +22,8 @@
 
 # Functional Dimensionality
 
+[![Build Status](https://travis-ci.org/lovelabUCL/dimensionality.svg?branch=master)](https://travis-ci.org/lovelabUCL/dimensionality)
+
 This is a method implemented in both Matlab and Python to estimate the functional dimensionality of (neural) data, as described in
 **Estimating the functional dimensionality of neural representations**
 Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the functional dimensionality of neural representations](https://www.sciencedirect.com/science/article/pii/S1053811918305226). Neuroimage, DOI: [10.1016/j.neuroimage.2018.06.015](https://doi.org/10.1016/j.neuroimage.2018.06.015).  Guidance for the Matlab and Python implementations is provided below.
