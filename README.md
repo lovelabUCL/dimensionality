@@ -113,6 +113,7 @@ transmedialint_tml_models
 
 ### Requirements
 
+- Python 3
 - [Nibabel](http://nipy.org/nibabel/)
 - [Numpy](http://www.numpy.org/)
 - [Scipy](https://www.scipy.org/)
@@ -124,11 +125,17 @@ More info in [requirements.txt](https://github.com/lovelabUCL/dimensionality/blo
 If you want to install this to use as a library please follow the instructions below, if you want to modify this code to use as a basis for your own method please [clone](https://help.github.com/articles/cloning-a-repository/) this repository instead.
 
 From within the ```FunctionalDimensionality``` directory, and preferably within a [Virtualenv](https://virtualenv.pypa.io/en/stable/), install as follows:
-
 ```python
 python setup.py build sdist
 pip install .
 ```
+
+Please use Python 3, i.e., make sure your ```python``` command is calling python 3:
+```python
+python --version
+Python 3.x.x
+```
+If not, use ```python3``` where we use ```python``` in all examples herein. If you don't have that command, please [install Python 3](https://www.python.org/downloads/).
 
 ### Usage
 
