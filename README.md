@@ -3,19 +3,21 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Functional Dimensionality](#functional-dimensionality)
-  - [MATLAB implementation](#matlab-implementation)
+  - [Overview](#overview)
+  - [Citation](#citation)
+  - [MATLAB](#matlab)
     - [Requirements](#requirements)
     - [Usage](#usage)
       - [ROI](#roi)
       - [Searchlight](#searchlight)
-      - [Demonstration](#demonstration)
-  - [Python implementation](#python-implementation)
+    - [Demonstration](#demonstration)
+  - [Python](#python)
     - [Requirements](#requirements-1)
     - [Installation](#installation)
     - [Usage](#usage-1)
       - [ROI](#roi-1)
       - [Searchlight](#searchlight-1)
-      - [Demonstration](#demonstration-1)
+    - [Demonstration](#demonstration-1)
   - [General pipeline](#general-pipeline)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -24,11 +26,20 @@
 
 [![Build Status](https://travis-ci.org/lovelabUCL/dimensionality.svg?branch=master)](https://travis-ci.org/lovelabUCL/dimensionality)
 
+## Overview
 This is a method implemented in both Matlab and Python to estimate the functional dimensionality of (neural) data, as described in
 **Estimating the functional dimensionality of neural representations**
-Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the functional dimensionality of neural representations](https://www.sciencedirect.com/science/article/pii/S1053811918305226). Neuroimage, DOI: [10.1016/j.neuroimage.2018.06.015](https://doi.org/10.1016/j.neuroimage.2018.06.015).  Guidance for the Matlab and Python implementations is provided below.
+Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the functional dimensionality of neural representations](https://www.sciencedirect.com/science/article/pii/S1053811918305226). Neuroimage, DOI: [10.1016/j.neuroimage.2018.06.015](https://doi.org/10.1016/j.neuroimage.2018.06.015).
 
-## MATLAB implementation
+Guidance for the Matlab and Python implementations is provided below.
+
+## Citation
+Please cite this paper if you use this software (also see [CITATION.cff](https://github.com/lovelabUCL/dimensionality/blob/master/CITATION.cff) and [CITATION.bib](https://github.com/lovelabUCL/dimensionality/blob/master/CITATION.bib) for a BibTeX file):
+
+- **Estimating the functional dimensionality of neural representations**
+Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the functional dimensionality of neural representations](https://www.sciencedirect.com/science/article/pii/S1053811918305226). Neuroimage, DOI: [10.1016/j.neuroimage.2018.06.015](https://doi.org/10.1016/j.neuroimage.2018.06.015).
+
+## MATLAB
 
 Estimate the functional dimensionality in a ROI or a searchlight in MATLAB.
 
@@ -57,9 +68,9 @@ Currently, pre-whitening is implemented by passing in the full path to "SPM.mat"
 
 ```functional_dimensionality(wholebrain_all, '/path/to/mask', 'spmfile','/path/to/SPM.mat')```
 
-#### Demonstration
+### Demonstration
 
-A small (<1Mb) ammount of simulated data with nominal dimensionality 4 for 64 voxels and 6 sessions for 20 subjects is provided in the "Matlab/demo_data" directory, along with a 4x4x4 mask with all voxels set to "true". This can be used as follows:
+A small (<1Mb) amount of simulated data with nominal dimensionality 4 for 64 voxels and 6 sessions for 20 subjects is provided in the "Matlab/demo_data" directory, along with a 4x4x4 mask with all voxels set to "true". This can be used as follows:
 
 ```
 matfile = load('demo_data/sample_data.mat');
@@ -98,7 +109,7 @@ transmedialint_tml_models
     4.0000    5.0000    4.0000    4.1667    3.3333
 ```        
 
-## Python implementation
+## Python
 
 ### Requirements
 
@@ -106,17 +117,18 @@ transmedialint_tml_models
 - [Numpy](http://www.numpy.org/)
 - [Scipy](https://www.scipy.org/)
 
+More info in [requirements.txt](https://github.com/lovelabUCL/dimensionality/blob/master/Python/FunctionalDimensionality/requirements.txt).
+
 ### Installation
 
-If you want to install this to use as a library please follow the instructions below, if you want to modify this code to use as a basis for your own method please clone the repository instead.
+If you want to install this to use as a library please follow the instructions below, if you want to modify this code to use as a basis for your own method please [clone](https://help.github.com/articles/cloning-a-repository/) this repository instead.
 
-From within the ```FunctionalDimensionality``` directory, and preferably within a [Virtualenv](https://virtualenv.pypa.io/en/stable/), one may install as follows:
+From within the ```FunctionalDimensionality``` directory, and preferably within a [Virtualenv](https://virtualenv.pypa.io/en/stable/), install as follows:
 
 ```python
 python setup.py build sdist
 pip install .
 ```
-The
 
 ### Usage
 
@@ -144,7 +156,7 @@ For searchlights, if a sphere radius is specified, the results are corrected by 
 
 Each item in the dictionary will be an array of voxel arrays, averaged over each session.
 
-#### Demonstration
+### Demonstration
 
 A small (<1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "Python/demo_data" directory. This can be used as follows (or run the ```demo.py``` in ```Python/FunctionalDimensionality```):
 :

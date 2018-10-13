@@ -1,0 +1,20 @@
+cff-version: 1.0.3
+message: If you use this software, please cite it as below.
+references:
+  - type: article
+    authors:
+      - family-names: Ahlheim
+        given-names: Christiane
+        affiliation: "Department of Experimental Psychology, University College London, 26 Bedford Way, London, WC1H 0AP, United Kingdom"
+      - family-names: Love
+        given-names: Bradley C.
+        affiliation: "Department of Experimental Psychology, University College London, 26 Bedford Way, London, WC1H 0AP, United Kingdom and Alan Turing Institute, United Kingdom"
+        orcid: https://orcid.org/0000-0002-7883-7076
+        website: http://www.bradlove.org
+    title: "Estimating the functional dimensionality of neural representations"
+    year: 2018
+    journal: NeuroImage
+    volume: 179
+    issue: 1
+    doi: 10.1016/j.neuroimage.2018.06.015
+    url: https://doi.org/10.1016/j.neuroimage.2018.06.015
