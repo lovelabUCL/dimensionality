@@ -10,15 +10,14 @@
     - [Usage](#usage)
       - [ROI](#roi)
       - [Searchlight](#searchlight)
-    - [Demonstration](#demonstration)
+    - [Demo](#demo)
   - [Python](#python)
     - [Requirements](#requirements-1)
     - [Installation](#installation)
     - [Usage](#usage-1)
       - [ROI](#roi-1)
       - [Searchlight](#searchlight-1)
-    - [Demonstration](#demonstration-1)
-  - [General pipeline](#general-pipeline)
+    - [Demo](#demo-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -68,7 +67,7 @@ Currently, pre-whitening is implemented by passing in the full path to "SPM.mat"
 
 ```functional_dimensionality(wholebrain_all, '/path/to/mask', 'spmfile','/path/to/SPM.mat')```
 
-### Demonstration
+### Demo
 
 A small (<1Mb) amount of simulated data with nominal dimensionality 4 for 64 voxels and 6 sessions for 20 subjects is provided in the "Matlab/demo_data" directory, along with a 4x4x4 mask with all voxels set to "true". This can be used as follows:
 
@@ -163,7 +162,7 @@ For searchlights, if a sphere radius is specified, the results are corrected by 
 
 Each item in the dictionary will be an array of voxel arrays, averaged over each session.
 
-### Demonstration
+### Demo
 
 A small (<1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "Python/demo_data" directory. This can be used as follows (or run the ```demo.py``` in ```Python/FunctionalDimensionality```):
 :
