@@ -71,7 +71,8 @@ Currently, pre-whitening is implemented by passing in the full path to "SPM.mat"
 
 A small (<1Mb) amount of simulated data with nominal dimensionality 4 for 64 voxels and 6 sessions for 20 subjects is provided in the "Matlab/demo_data" directory, along with a 4x4x4 mask with all voxels set to "true". This can be used as follows:
 
-```
+```matlab
+% load demo data, build 'wholebrain_all'
 matfile = load('demo_data/sample_data.mat');
 [vox, cond, sessions, subjects] = size(matfile.sample_data);
 wholebrain_all = {};
@@ -79,34 +80,21 @@ for i = 1:subjects
     brain = matfile.sample_data(:,:,:,i);
     wholebrain_all{i} = brain;
 end
-[mean_bestn,mean_r_outer_mean_r_alter,]=functional_dimensionality(wholebrain_all,'demo_data/sample_mask.img');
 
-```
+% separate estimates for each run
+[bestn_all,r_outer_all,r_alter_all,test_tfce]=functional_dimensionality(wholebrain_all,'demo_data/sample_mask.img');
 
-The results should be:
+% average over runs:
+for i_subject = 1:subjects
+    mean_r_outer(:, i_subject) = mean(r_outer_all{i_subject},1);
+    mean_r_alter(:, i_subject) = mean(r_alter_all{i_subject},1);
+    mean_bestn(:, i_subject)   = mean(bestn_all{i_subject},1);
+end
 
-```
->> mean_bestn
-
-mean_bestn =
-
-  Columns 1 through 5
-
-    4.1667    4.5000    4.3333    4.6667    4.0000
-
-  Columns 6 through 10
-
-    4.1667    6.0000    4.0000    4.0000    3.5000
-
-  Columns 11 through 15
-transmedialint_tml_models
-
-    5.8333    4.5000    4.0000    7.0000    5.6667
-
-  Columns 16 through 20
-
-    4.0000    5.0000    4.0000    4.1667    3.3333
-```        
+expected_mean_bestn = [4.1667  4.5000   4.3333  4.6667  4.0000 4.1667  6.0000  4.0000    4.0000   3.5000   5.8333   4.5000  4.0000  7.0000  5.6667  4.0000  5.0000  4.0000  4.1667    3.3333];
+disp('   subject  predicted  observed')
+disp([ (1:subjects)' mean_bestn',expected_mean_bestn'])
+```      
 
 ## Python
 
