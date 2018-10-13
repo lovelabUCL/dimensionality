@@ -187,40 +187,11 @@ all_subjects = (data[:, :, :, i] for i in range(20))
 # Find the dimensionality.
 results = functional_dimensionality(all_subjects, 20, mask)
 
-print(results)
+print(results['bestn'].mean())
 ```
 
-The results should be (recall ```bestn``` is the mean best dimensionality):
-
+The result of running that last line:
 ```python
->>> results['bestn']
- array([[4.16666667, 4.5       , 4.33333333, 4.66666667, 4.        ,
-        4.16666667, 6.        , 4.        , 4.        , 3.5       ,
-        5.83333333, 4.5       , 4.        , 7.        , 5.66666667,
-        4.        , 5.        , 4.        , 4.16666667, 3.33333333]])
 >>> results['bestn'].mean()
 4.541666666666667
-
 ```
-
-## General pipeline
-The user should:
-- Load data (beta estimates for each subject: voxel x conditions x sessions).
-- If pre-whitening: load residuals as well.
-- Mask both residuals and data using a wholebrain or ROI mask.
-
-The function will then, for each searchlight/ROI:
-
-+ whiten and mean-center data within the searchlight;
-+ run the nested cross-validation;
-+ average training data, get all possible low-dimensional reconstructions of the training data;
-+ correlate each low-dimensional reconstruction of the training data with the validation data;
-+ across all partitions into training and validation, identify which dimensionality "k" resulted in the highest average correlation between the reconstructed data and the validation data;
-+ average training and validation data, build k-dimensional reconstruction of the data and correlate with test-set;
-+ as each run serves as a test set once, the method returns one dimensionality estimate and correlation coefficient per run.
-
-The function returns:
-
-- mean_bestn, mean best dimensionality
-- mean_r_outer, mean lowest correlation
-- mean_r_alter, mean highest correlation    
