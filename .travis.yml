@@ -6,12 +6,11 @@ python:
 sudo: enabled
 
 install:
-  - pip install codecov
-  - pip install coverage
+  - pip install codecov coverage
   - pip install -r Python/FunctionalDimensionality/requirements.txt
 
 script:
   - make test
 
 after_success:
-  - codecov
+  - cd Python/FunctionalDimensionality/; codecov
