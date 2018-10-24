@@ -122,4 +122,4 @@ def svd_nested_crossval(data):
         r_outer[i_test] = reconstruct(U, S, V, bestn[i_test], data_test)
         r_alter[i_test] = reconstruct(U, S, V, n_comp - 1, data_test)
 
-    return (1 + bestn, r_outer, r_alter)
+    return (1 + bestn, r_outer, r_alter, rmat, i_test)

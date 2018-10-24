@@ -17,4 +17,4 @@ all_subjects = (data[:, :, :, i] for i in range(20))
 # Find the dimensionality.
 results = functional_dimensionality(all_subjects, 20, mask)
 
-print(results['bestn'].mean())
+print(results)

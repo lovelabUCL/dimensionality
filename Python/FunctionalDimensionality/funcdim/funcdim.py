@@ -149,11 +149,13 @@ def searchlight_estimator(data, res, voxel_keys, voxel_map, n_voxels):
 def roi_estimator(data, res):
     """ROI estimator."""
     if res is None:
-        bestn, r_outer, r_alter = svd_nested_crossval(data)
+        bestn, r_outer, r_alter, rmat = svd_nested_crossval(data)
     else:
-        bestn, r_outer, r_alter = svd_nested_crossval(pre_proc(data, res))
+        bestn, r_outer, r_alter, rmat = svd_nested_crossval(pre_proc(data,
+                                                                     res))
 
-    return {'bestn': bestn, 'r_outer': r_outer, 'r_alter': r_alter}
+    return {'bestn': bestn, 'r_outer': r_outer, 'r_alter': r_alter,
+            'rmat': rmat}
 
 
 def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
@@ -220,11 +222,13 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
     bestn_all = []
     r_outer_all = []
     r_alter_all = []
+    rmat_all = []
 
     for estimate in estimates:
         bestn_all.append(estimate['bestn'])
         r_outer_all.append(estimate['r_outer'])
         r_alter_all.append(estimate['r_alter'])
+        rmat_all.append(estimate['rmat'])
 
     mean_bestn = np.zeros(mean_shape)
     mean_r_outer = np.zeros(mean_shape)
@@ -244,7 +248,8 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
 
     results = {'bestn': np.asarray(bestn_all),
                'r_outer': np.asarray(r_outer_all),
-               'r_alter': np.asarray(r_alter_all)}
+               'r_alter': np.asarray(r_alter_all),
+               'rmat': np.asarray(rmat_all)}
 
     if not sphere:
         results['std_bestn'] = std_bestn
