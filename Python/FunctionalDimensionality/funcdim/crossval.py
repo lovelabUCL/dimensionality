@@ -61,6 +61,7 @@ def reconstruct(U, S, V, ncomp, testdata):
     """
     s_red = np.copy(S)
     # Set higher-dimensional components to zero.
+
     s_red[:, ncomp + 1:] = 0.0
     reconstruction = np.matmul(np.matmul(U, s_red), V.T)
     correlation, _ = pearsonr(reconstruction.ravel(), testdata.ravel())
@@ -87,9 +88,9 @@ def svd_nested_crossval(data):
     n_beta, n_session = data.shape[1:]
     n_comp = n_beta - 1
     rmat = np.zeros((n_comp, n_session - 1, n_session))
-    bestn = np.zeros(n_session, dtype='int32')
-    r_outer = np.zeros(n_session)
-    r_alter = np.zeros(n_session)
+    bestn = np.zeros((n_session - 1, n_session), dtype='int32')
+    r_outer = np.zeros((n_session - 1, n_session))
+    r_alter = np.zeros((n_session - 1, n_session))
 
     for i_test in range(n_session):
         # Remove the data for the ith session to produce test and validation
@@ -110,16 +111,17 @@ def svd_nested_crossval(data):
             for comp in range(n_comp):
                 rmat[comp, j_val, i_test] = reconstruct(Uval, Sval, Vval, comp,
                                                         data_val[:, :, j_val])
+            # Fisher z-transformation:
+            rmax = np.arctanh(rmat[:, :, i_test])
+            # The index with the greatest correlation corresponds to the best
+            # dimensionality, so the incremented index must be returned.
+            bestn[j_val, i_test] = np.argmax(rmax)
 
-        # Mean Fisher z-transformation:
-        meanr = np.mean(np.arctanh(rmat[:, :, i_test]), axis=1)
-        # The index with the greatest correlation corresponds to the best
-        # dimensionality, so the incremented index must be returned.
-        bestn[i_test] = np.argmax(meanr)
+            U, S, V = make_components(data_val)
 
-        U, S, V = make_components(data_val)
+            r_outer[j_val, i_test] = reconstruct(U, S, V, bestn[j_val, i_test],
+                                                 data_test)
+            r_alter[j_val, i_test] = reconstruct(U, S, V, n_comp - 1,
+                                                 data_test)
 
-        r_outer[i_test] = reconstruct(U, S, V, bestn[i_test], data_test)
-        r_alter[i_test] = reconstruct(U, S, V, n_comp - 1, data_test)
-
-    return (1 + bestn, r_outer, r_alter, rmat, i_test)
+    return (1 + bestn, r_outer, r_alter)
