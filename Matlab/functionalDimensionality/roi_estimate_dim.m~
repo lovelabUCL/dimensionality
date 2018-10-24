@@ -1,4 +1,4 @@
-function [bestn,r_outer, r_alter, rmat] = roi_estimate_dim(data,res)
+function [bestn,r_outer, r_alter, rmat_output] = roi_estimate_dim(data,res)
 %% “Copyright 2018, Christiane Ahlheim”
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
@@ -34,6 +34,6 @@ end
 bestn    = cat(2,output{:,1});
 r_outer  = cat(2,output{:,2});
 r_alter  = cat(2,output{:,3});
-rmat     = cat(2,output{:,4});
+rmat = cat(2,output{:,4});
 
 end

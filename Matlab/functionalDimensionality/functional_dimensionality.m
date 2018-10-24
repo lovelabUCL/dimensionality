@@ -1,4 +1,4 @@
-function [bestn_all,r_outer_all, r_alter_all, test_tfce] = functional_dimensionality(wholebrain_all, mask, varargin)
+function [bestn_all,r_outer_all, r_alter_all, test_tfce, rmat_output] = functional_dimensionality(wholebrain_all, mask, varargin)
 %% ???Copyright 2018, Christiane Ahlheim???
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
@@ -64,17 +64,20 @@ for i_subject = 1:n_subject
         res = false;
     end
     
+    
     if sphere > 0
         % Sphere specified, do searchlight.
         [bestn,r_outer, r_alter] = searchlight_estimate_dim(data, logical(mask_mat), res, sphere);
     else
         % No sphere, do ROI.
-        [bestn,r_outer, r_alter] = roi_estimate_dim(data, res);
+        [bestn,r_outer, r_alter, rmat] = roi_estimate_dim(data, res);
     end
 
     bestn_all{i_subject}   = bestn;
     r_outer_all{i_subject} = r_outer;
     r_alter_all{i_subject} = r_alter;
+    
+    rmat_output{i_subject} = rmat;
         
 end
 

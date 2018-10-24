@@ -38,7 +38,7 @@ for i_test = 1:n_session
     end
     % Step 2: Mean Fischer z-transform.
     keyboard
-    meanr = mean(atanh(rmat(:,:,i_test)),2);
+%     meanr = mean(atanh(rmat(:,:,i_test)),2);
     % Step 2: Pick the dimensionality with the highest correlelation.
     bestn(i_test) = find(meanr==max(meanr));
     % Step 2: SVD and reconstruction of averaged training and validation data.
