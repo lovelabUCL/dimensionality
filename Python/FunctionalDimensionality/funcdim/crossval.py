@@ -68,7 +68,72 @@ def reconstruct(U, S, V, ncomp, testdata):
     return correlation
 
 
-def svd_nested_crossval(data):
+def svd_nested_crossval(data, option='full'):
+    if option == 'full':
+        svd_nested_crossval_full(data)
+    elif option == 'mean':
+        svd_nested_crossval_mean(data)
+    else:
+        raise Exception('Unknown option: ' + str(option),
+                        '"full" and "mean" are the only options.')
+
+
+def svd_nested_crossval_mean(data):
+    """Estimate dimensionality for voxels for conditions and sessions.
+    Arguments
+    ---------
+        data: n * m * o Numpy array of beta values for n voxels and m
+            conditions over o sessions.
+    Returns
+    -------
+        bestn: Array of best estimates of dimensionality for each session.
+        r_outer: Correlations between data for each session and the
+            best low-dimensional reconstruction of all other sessions.
+        r_alter: Correlations between data for each session and the
+            highest dimensional reconstruction of all other sessions.
+    """
+    n_beta, n_session = data.shape[1:]
+    n_comp = n_beta - 1
+    rmat = np.zeros((n_comp, n_session - 1, n_session))
+    bestn = np.zeros(n_session, dtype='int32')
+    r_outer = np.zeros(n_session)
+    r_alter = np.zeros(n_session)
+
+    for i_test in range(n_session):
+        # Remove the data for the ith session to produce test and validation
+        # sets.
+        data_val = np.delete(data, i_test, axis=2)
+        data_test = data[:, :, i_test]
+
+        for j_val in range(n_session - 1):
+            # Remove the data for the jth session to produce training and test
+            # sets.
+            data_val_train = np.delete(data_val, j_val, axis=2)
+
+            # Facorize the mean of the training set over all sessions.
+            Uval, Sval, Vval = make_components(data_val_train)
+
+            # Find the correlations between reconstructions of the training set
+            # for each possible dimensionality and the test set.
+            for comp in range(n_comp):
+                rmat[comp, j_val, i_test] = reconstruct(Uval, Sval, Vval, comp,
+                                                        data_val[:, :, j_val])
+
+        # Mean Fisher z-transformation:
+        meanr = np.mean(np.arctanh(rmat[:, :, i_test]), axis=1)
+        # The index with the greatest correlation corresponds to the best
+        # dimensionality, so the incremented index must be returned.
+        bestn[i_test] = np.argmax(meanr)
+
+        U, S, V = make_components(data_val)
+
+        r_outer[i_test] = reconstruct(U, S, V, bestn[i_test], data_test)
+        r_alter[i_test] = reconstruct(U, S, V, n_comp - 1, data_test)
+
+    return (1 + bestn, r_outer, r_alter)
+
+
+def svd_nested_crossval_full(data):
     """Estimate dimensionality for voxels for conditions and sessions.
 
     Arguments
@@ -112,7 +177,8 @@ def svd_nested_crossval(data):
                 rmat[comp, j_val, i_test] = reconstruct(Uval, Sval, Vval, comp,
                                                         data_val[:, :, j_val])
             # Fisher z-transformation:
-            rmax = np.arctanh(rmat[:, :, i_test])
+            rmax = rmat[:, j_val, i_test]
+
             # The index with the greatest correlation corresponds to the best
             # dimensionality, so the incremented index must be returned.
             bestn[j_val, i_test] = np.argmax(rmax)

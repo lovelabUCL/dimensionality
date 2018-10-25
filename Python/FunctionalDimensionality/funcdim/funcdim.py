@@ -146,19 +146,19 @@ def searchlight_estimator(data, res, voxel_keys, voxel_map, n_voxels):
     return {'bestn': bestn, 'r_outer': r_outer, 'r_alter': r_alter}
 
 
-def roi_estimator(data, res):
+def roi_estimator(data, res, option='full'):
     """ROI estimator."""
     if res is None:
-        bestn, r_outer, r_alter = svd_nested_crossval(data)
+        bestn, r_outer, r_alter = svd_nested_crossval(data, option)
     else:
         bestn, r_outer, r_alter = \
-            svd_nested_crossval(pre_proc(data, res))
+            svd_nested_crossval(pre_proc(data, res), option)
 
     return {'bestn': bestn, 'r_outer': r_outer, 'r_alter': r_alter}
 
 
 def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
-                              res=None, test=tfce_onesample):
+                              res=None, test=tfce_onesample, option='full'):
     """Estimate functional dimensionality.
 
     Arguments
@@ -179,7 +179,11 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
             Set this to "None" or False to ignore this step.
 
     """
+
     iter_brain, first_brain = itertools.tee(wholebrain_all, 2)
+
+    option = ['haha' for brain in iter_brain]
+    print(option)
 
     unmasked_voxels, n_conditions, _ = first_brain.__next__().shape
 
@@ -206,16 +210,19 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=None,
         # mean_axis = 1
         # mean_shape = (n_voxels, n_subjects)
         args = (brain + (voxel_keys, voxel_map, n_voxels)
-                for brain in zip(masked_brains, residuals))
+                for brain in zip(masked_brains, residuals, option))
     else:
         # ROI:
         estimator = roi_estimator
         # mean_axis = 0
         # mean_shape = (1, n_subjects)
-        args = (brain for brain in zip(masked_brains, residuals))
+        args = (brain for brain in zip(masked_brains, residuals, option))
 
-    estimator_pool = Pool()
-    estimates = estimator_pool.starmap(estimator, args)
+    # estimator_pool = Pool()
+    # estimates = estimator_pool.starmap(estimator, args)
+
+    for (b, r, o) in zip(masked_brains, residuals, option):
+        estimator(b, r, o)
 
     bestn_all = []
     r_outer_all = []
