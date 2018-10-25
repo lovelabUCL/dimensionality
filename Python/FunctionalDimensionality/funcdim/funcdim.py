@@ -1,5 +1,7 @@
-"""Copyright 2018, Christiane Ahlheim, Sebastian Bobadilla-Suarez,
-Kurt Braunlich, Giles Greenway, & Olivia Guest.
+"""Copyright 2018.
+
+Authors: Christiane Ahlheim, Sebastian Bobadilla-Suarez, Kurt Braunlich,
+Giles Greenway, & Olivia Guest.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -76,10 +78,9 @@ def pre_proc(data, res):
     beta_norm = np.zeros(data.shape)
     for i_session in range(n_sessions):
         cov_e = covdiag(res[:, :, i_session].T)
-        beta_norm[:, :, i_session] = np.matmul(data[:, :, i_session].T,
-                                               scipy.linalg.
-                                               fractional_matrix_power(cov_e,
-                                                                       -0.5)).T
+        beta_norm[:, :, i_session] = \
+            np.matmul(data[:, :, i_session].T, scipy.linalg.
+                      fractional_matrix_power(cov_e, -0.5)).T
 
     return beta_norm - beta_norm.mean(axis=1).reshape(n_voxels, 1, n_sessions)
 
