@@ -16,6 +16,6 @@ mask = np.ones((4, 4, 4), dtype='bool')
 all_subjects = (data[:, :, :, i] for i in range(20))
 
 # Find the dimensionality.
-results = functional_dimensionality(all_subjects, 20, mask)
+results = functional_dimensionality(all_subjects, 20, mask, option='full')
 
 print(results)
