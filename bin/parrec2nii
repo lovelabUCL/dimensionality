@@ -1,9 +1,0 @@
-#!/home/olivia/GitHub/dimensionality/bin/python3
-"""PAR/REC to NIfTI converter
-"""
-
-from nibabel.cmdline.parrec2nii import main
-
-
-if __name__ == '__main__':
-    main()
