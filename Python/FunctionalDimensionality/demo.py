@@ -2,6 +2,7 @@
 
 from funcdim.funcdim import functional_dimensionality
 import numpy as np
+# import random
 
 # load the sample data.
 data = np.load('demo_data/sample_data.npy')
