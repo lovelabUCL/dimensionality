@@ -28,11 +28,11 @@
 
 ## Authors
 
--   *Christiane Ahlheim*: wrote original codebase in Matlab.
+-   **Christiane Ahlheim**: wrote original codebase in Matlab.
 
--   *Giles Greenway*: wrote original codebase in Python and optimised Matlab code.
+-   **Giles Greenway**: wrote original codebase in Python and optimised Matlab code.
 
--   *Sebastian Bobadilla-Suarez, Kurt Braunlich, & Olivia Guest*: modified Python and Matlab codebases for new features and release.
+-   **Sebastian Bobadilla-Suarez, Kurt Braunlich, & Olivia Guest**: modified Python and Matlab codebases for new features and release.
 
 ## Overview
 
