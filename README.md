@@ -1,3 +1,27 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Functional Dimensionality](#functional-dimensionality)
+  - [Authors](#authors)
+  - [Overview](#overview)
+  - [Citation](#citation)
+  - [MATLAB](#matlab)
+    - [Requirements](#requirements)
+    - [Usage](#usage)
+      - [ROI](#roi)
+      - [Searchlight](#searchlight)
+    - [Demo](#demo)
+  - [Python](#python)
+    - [Requirements](#requirements-1)
+    - [Installation](#installation)
+    - [Usage](#usage-1)
+      - [ROI](#roi-1)
+      - [Searchlight](#searchlight-1)
+    - [Demo](#demo-1)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Functional Dimensionality
 
 [![Build Status](https://travis-ci.org/lovelabUCL/dimensionality.svg?branch=master)](https://travis-ci.org/lovelabUCL/dimensionality)
@@ -9,28 +33,6 @@
 -   *Giles Greenway*: wrote original codebase in Python and optimised Matlab code.
 
 -   *Sebastian Bobadilla-Suarez, Kurt Braunlich, & Olivia Guest*: modified Python and Matlab codebases for new features and release.
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-
-- [Overview](#overview)
-- [Citation](#citation)
-- [MATLAB](#matlab)
-  - [Requirements](#requirements)
-  - [Usage](#usage)
-    - [ROI](#roi)
-    - [Searchlight](#searchlight)
-  - [Demo](#demo)
-- [Python](#python)
-  - [Requirements](#requirements-1)
-  - [Installation](#installation)
-  - [Usage](#usage-1)
-    - [ROI](#roi-1)
-    - [Searchlight](#searchlight-1)
-  - [Demo](#demo-1)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Overview
 
