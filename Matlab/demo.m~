@@ -8,7 +8,9 @@ for i = 1:subjects
 end
 
 % separate estimates for each run
-full=0;
+% full=1: return separate estimates for each nested-CV loop. 
+% Full=0: obtain
+full=1; 
 [bestn_all,r_outer_all,r_alter_all,test_tfce]=functional_dimensionality(wholebrain_all, ...
     'demo_data/sample_mask.img',full);
 

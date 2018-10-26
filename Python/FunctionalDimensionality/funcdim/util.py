@@ -1,4 +1,7 @@
-"""Copyright 2018, Giles Greenway & Christiane Ahlheim.
+"""Copyright 2018.
+
+Authors: Christiane Ahlheim, Sebastian Bobadilla-Suarez, Kurt Braunlich,
+Giles Greenway, & Olivia Guest.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

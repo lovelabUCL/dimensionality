@@ -1,4 +1,5 @@
-"""Copyright 2018, Giles Greenway & Christiane Ahlheim.
+"""Copyright 2018, Christiane Ahlheim, Sebastian Bobadilla-Suarez,
+Kurt Braunlich, Giles Greenway & Olivia Guest.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,6 +16,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from . import crossval
-from . import searchlight
-from . import tfce
 from . import util

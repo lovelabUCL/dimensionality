@@ -7,8 +7,11 @@ for i = 1:subjects
     wholebrain_all{i} = brain;
 end
 
+% full=1: return separate estimates for each inner CV loop. 
+% full=0: estimate best dimensionality by averaging over inner CV loop.
+full=1; 
+
 % separate estimates for each run
-full=0;
 [bestn_all,r_outer_all,r_alter_all,test_tfce]=functional_dimensionality(wholebrain_all, ...
     'demo_data/sample_mask.img',full);
 
