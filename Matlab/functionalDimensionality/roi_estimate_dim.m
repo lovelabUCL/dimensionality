@@ -14,11 +14,7 @@ function [bestn,r_outer, r_alter] = roi_estimate_dim(data,res,full)
 if islogical(res)
     % Skip pre-procesing...
     % Step 2: Evaluating all possible SVD (dimensional) models.
-    if full
-        output = svd_nested_crossval_full(data);
-    else
-        output = svd_nested_crossval_mean(data);
-    end
+     output = svd_nested_crossval(data,full);
 else
     % ...or Step 1: Data pre-processing
     % noise normalisation:
@@ -32,11 +28,7 @@ else
     % remove voxel baseline:
     data_mc = beta_norm - repmat(mean(beta_norm, 2), 1,n_betas, 1);
     % Step 2: Evaluating all possible SVD (dimensional) models.
-    if full
-        output = svd_nested_crossval_full(data_mc);
-    else
-        output = svd_nested_crossval_mean(data_mc);
-    end
+    output = svd_nested_crossval(data_mc,full);
 end
 
 bestn    = cat(2,output{:,1});

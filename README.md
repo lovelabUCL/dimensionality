@@ -85,6 +85,8 @@ Currently, pre-whitening is implemented by passing in the full path to "SPM.mat"
 A small (&lt;1Mb) amount of simulated data with nominal dimensionality 4 for 64 voxels and 6 sessions for 20 subjects is provided in the "Matlab/demo_data" directory, along with a 4x4x4 mask with all voxels set to "true". This can be used as follows:
 
 ```matlab
+clear all; close all; clc;
+
 matfile = load('demo_data/sample_data.mat');
 [vox, cond, sessions, subjects] = size(matfile.sample_data);
 wholebrain_all = {};
@@ -93,9 +95,11 @@ for i = 1:subjects
     wholebrain_all{i} = brain;
 end
 
-% full=1: return separate estimates for each inner CV loop.
-% full=0: estimate best dimensionality by averaging over inner CV loop.
-full=1;
+% select 'full' or 'mean' option:
+%   - full=0: estimate best dimensionality by averaging over inner CV loop. (as
+%     in paper)
+%   - full=1: return separate estimates for each inner CV loop.
+full = 0;
 
 % separate estimates for each run
 [bestn_all,r_outer_all,r_alter_all,test_tfce]=functional_dimensionality(wholebrain_all, ...
@@ -110,6 +114,7 @@ end
 
 % point estimate of best dimensionality:
 fprintf('bestn = %.2f\n',mean(mean_bestn(:)))
+
 
 % mean (full=0) = 4.54
 % full (full=1) = 5.01
