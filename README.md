@@ -58,7 +58,6 @@ Estimate the functional dimensionality in a ROI in MATLAB.
 -   [Matlab Stan](http://mc-stan.org/users/interfaces/matlab-stan) (only needed to run the hierarchical model).
 -   Model comparison could be done using [PSIS](https://github.com/avehtari/PSIS).
 -   The `covdiag` function from [https://github.com/jooh/pilab](pilab) (shrinkage of the residual covariance matrix during pre-whitening).
--   TFCE correction can be run using FSL or with [MatlabTFCE](https://github.com/markallenthornton/MatlabTFCE).
 
 ### Usage
 
