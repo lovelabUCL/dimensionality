@@ -118,23 +118,6 @@ ROI
 Each item in the dictionary will be an array with a single value for
 each subject, averaged over each session.
 
-Searchlight
-^^^^^^^^^^^
-
-``functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=<sphere_radius>, test=tfce_onesample, res=None)``
-For searchlights, if a sphere radius is specified, the results are
-corrected by applying threshold free cluster enhancement
-(`TFCE <https://www.ncbi.nlm.nih.gov/pubmed/18501637>`__) by default
-using a limited implementation based on the `Matlab
-version <https://github.com/markallenthornton/MatlabTFCE>`__ by Mark
-Allen Thornton. To bypass this, users may set the ``test`` keyword
-argument to ``None``, or pass in a function of their own. This should
-accept a Numpy array of dimensions ``x_voxels`` x ``y_voxels`` x
-``z_voxels`` x ``n_images`` and return a single image as a Numpy array.
-
-Each item in the dictionary will be an array of voxel arrays, averaged
-over each session.
-
 Demo
 ~~~~
 
