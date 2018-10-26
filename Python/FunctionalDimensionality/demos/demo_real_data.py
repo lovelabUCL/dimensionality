@@ -13,14 +13,15 @@ import numpy as np
 data = np.load('./demos/demo_data/sample_data.npy')
 # "data" has the shape (64, 16, 6, 20), containing beta values for 64 voxels,
 # 16 conditions, 6 sessions, 20 subjects.
+nsubs = 20
 
 # Create a 4*4*4 mask (all True) for the 64 voxels.
 mask = np.ones((4, 4, 4), dtype='bool')
 
 # Create an iterator over the 20 subjects.
-all_subjects = (data[:, :, :, i] for i in range(20))
+all_subjects = (data[:, :, :, i] for i in range(nsubs))
 
 # Find the dimensionality.
-results = functional_dimensionality(all_subjects, 20, mask, option='full')
+results = functional_dimensionality(all_subjects, nsubs, mask, option='full')
 
 print(results['bestn'].mean())

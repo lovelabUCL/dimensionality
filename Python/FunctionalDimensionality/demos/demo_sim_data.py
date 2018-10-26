@@ -2,7 +2,7 @@
 Demo script using simulated data.
 
 Call this demo from the ./Python/FunctionalDimensionality directory using:
-python demos/demo_real_data.py
+python demos/demo_sim_data.py
 """
 
 from funcdim.funcdim import functional_dimensionality

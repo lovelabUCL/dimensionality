@@ -79,7 +79,7 @@ def load_mask(mask_file):
     return nib.load(mask_file).get_data() > 0
 
 
-def demo_data(ndims=16, functional_dims=4, nvoxels=64, nconditions=16, nruns=6,
+def demo_data(functional_dims=4, nvoxels=64, nconditions=16, nruns=6,
               nsubs=20):
     """Generate demo data with a set dimensionality for tests and demo."""
     # Check nvoxels is a cube:
@@ -91,8 +91,8 @@ def demo_data(ndims=16, functional_dims=4, nvoxels=64, nconditions=16, nruns=6,
     # "data" has the shape (nvoxels, nconditions, nruns, nsubs), containing
     # "beta" values for nvoxels
     data = np.random.multivariate_normal(
-        np.zeros((ndims,)), np.eye(ndims), size=(nvoxels))
-    data[:, functional_dims:] = np.zeros((data[:, functional_dims:].shape))
+        np.zeros((nconditions,)), np.eye(nconditions), size=(nvoxels))
+    data[:, functional_dims:] = np.ones((data[:, functional_dims:].shape))
     data = data.reshape((nvoxels, nconditions, 1))
     data = np.tile(data, (nruns))
     data = data.reshape((nvoxels, nconditions, nruns, 1))
