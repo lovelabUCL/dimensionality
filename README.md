@@ -99,7 +99,7 @@ end
 %   - full=0: estimate best dimensionality by averaging over inner CV loop. (as
 %     in paper)
 %   - full=1: return separate estimates for each inner CV loop.
-full = 0;
+full = 1;
 
 % separate estimates for each run
 [bestn_all,r_outer_all,r_alter_all,test_tfce]=functional_dimensionality(wholebrain_all, ...
