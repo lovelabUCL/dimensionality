@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import numpy as np
 from scipy.stats import pearsonr
 
+
 def make_components(data):
     """Factorize an array of mean beta values over all sessions.
 

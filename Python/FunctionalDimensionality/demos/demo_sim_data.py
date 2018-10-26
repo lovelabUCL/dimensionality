@@ -1,27 +1,21 @@
-#!/usr/bin/env python3
+"""
+Demo script using simulated data.
 
-import sys
-sys.path.insert(0, '../')
+Call this demo from the ./Python/FunctionalDimensionality directory using:
+python demos/demo_real_data.py
+"""
+
 from funcdim.funcdim import functional_dimensionality
+from funcdim.util import demo_data
 import numpy as np
 
-ndims = 16
-functional_dims = 4
-nvoxels = 64 #has to be a power of 3
-nconditions = 16
-nruns = 6
+# Get some randomly generated data with 4 dimensions as ground truth:
+nvoxels = 64
 nsubs = 20
-
-# "data" has the shape (nvoxels, nconditions, nruns, nsubs), containing "beta" values for nvoxels,
-data = np.random.multivariate_normal(np.zeros((ndims,)),np.eye(ndims), size=(nvoxels))
-data[:,functional_dims:] = np.zeros((data[:,functional_dims:].shape))
-data = data.reshape((nvoxels, nconditions, 1))
-data = np.tile(data,(nruns))
-data = data.reshape((nvoxels, nconditions, nruns, 1))
-data = np.tile(data,(nsubs))
+data = demo_data(nvoxels=nvoxels, nsubs=nsubs, functional_dims=4)
 
 # Create a mask (all True) for nvoxels.
-mask_dim = int(np.round(np.power(nvoxels,1/3)))
+mask_dim = int(np.round(np.power(nvoxels, 1 / 3)))
 mask = np.ones((mask_dim, mask_dim, mask_dim), dtype='bool')
 
 # Create an iterator over the 20 subjects.
@@ -30,5 +24,4 @@ all_subjects = (data[:, :, :, i] for i in range(nsubs))
 # Find the dimensionality.
 results = functional_dimensionality(all_subjects, nsubs, mask, option='full')
 
-#print(results['bestn'])
-print(np.mean(results['bestn']))
+print(results['bestn'].mean())
