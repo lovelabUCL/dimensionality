@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import sys
+sys.path.insert(0, '../')
 from funcdim.funcdim import functional_dimensionality
 import numpy as np
 # import random
