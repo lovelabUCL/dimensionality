@@ -30,5 +30,5 @@ all_subjects = (data[:, :, :, i] for i in range(nsubs))
 # Find the dimensionality.
 results = functional_dimensionality(all_subjects, nsubs, mask, option='full')
 
-print(results['bestn'])
-#print(np.mean(results['bestn']))
+#print(results['bestn'])
+print(np.mean(results['bestn']))
