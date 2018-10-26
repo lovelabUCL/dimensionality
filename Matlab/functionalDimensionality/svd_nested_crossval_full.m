@@ -1,4 +1,4 @@
-function output = svd_nested_crossval(data)
+function output = svd_nested_crossval_full(data)
 %% “Copyright 2018, Christiane Ahlheim”
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
