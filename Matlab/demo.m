@@ -25,3 +25,6 @@ end
 % point estimate of best dimensionality:
 fprintf('bestn = %.2f\n',mean(mean_bestn(:)))
 
+
+% mean (full=0) = 4.54
+% full (full=1) = 5.01

@@ -93,9 +93,9 @@ for i = 1:subjects
     wholebrain_all{i} = brain;
 end
 
-% full=1: return separate estimates for each inner CV loop. 
+% full=1: return separate estimates for each inner CV loop.
 % full=0: estimate best dimensionality by averaging over inner CV loop.
-full=1; 
+full=1;
 
 % separate estimates for each run
 [bestn_all,r_outer_all,r_alter_all,test_tfce]=functional_dimensionality(wholebrain_all, ...
@@ -111,8 +111,8 @@ end
 % point estimate of best dimensionality:
 fprintf('bestn = %.2f\n',mean(mean_bestn(:)))
 
-% full (full=0) = 4.54
-% mean (full=1) = 5.01
+% mean (full=0) = 4.54
+% full (full=1) = 5.01
 ```      
 
 
