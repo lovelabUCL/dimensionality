@@ -1,0 +1,19 @@
+we get j-1* m-1 correlation coefficients
+
+for sess in outer:
+	for j_val in inner:
+		- we fisher transform
+		- average across j-1 partitions (within dim)
+
+	- bestN for sess = choose the dim with the best zcorrelation.
+
+	- average the training and validation data
+	- SVD
+	- reconstruct
+	- correlate with test (note this is part of 
+"reconstruct" function... terrible name)
+
+
+we end up with 
+- j dim estimates per sub (not j * (j-1)?)
+- j r estimates per sub

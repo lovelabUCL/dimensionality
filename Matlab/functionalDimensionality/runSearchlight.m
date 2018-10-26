@@ -61,6 +61,6 @@ if ~islogical(res)
 end
     
 % Step 2: Evaluating all possible SVD (dimensional) models.
-output = ca_svd_nested_crossval(data_sl);
+output = ca_svd_nested_crossval_mean(data_sl);
 
 end
