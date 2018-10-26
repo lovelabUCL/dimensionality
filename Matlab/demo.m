@@ -25,5 +25,3 @@ end
 % point estimate of best dimensionality:
 fprintf('bestn = %.2f\n',mean(mean_bestn(:)))
 
-
-%%
