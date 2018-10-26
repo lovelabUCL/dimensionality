@@ -1,4 +1,4 @@
-function [bestn_all,r_outer_all, r_alter_all, test_tfce] = functional_dimensionality(wholebrain_all, mask, full,varargin)
+function [bestn_all,r_outer_all, r_alter_all, test_tfce] = functional_dimensionality(wholebrain_all, mask, full, varargin)
 %% ???Copyright 2018, Christiane Ahlheim???
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
@@ -65,9 +65,12 @@ for i_subject = 1:n_subject
     
     [bestn,r_outer, r_alter] = roi_estimate_dim(data, res,full);
 
+
     bestn_all{i_subject}   = bestn;
     r_outer_all{i_subject} = r_outer;
     r_alter_all{i_subject} = r_alter;
+    
+    rmat_output{i_subject} = rmat;
         
 end
 

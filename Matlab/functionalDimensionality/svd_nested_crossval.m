@@ -67,4 +67,4 @@ for i_test = 1:n_session
 
 end
 
-output = {bestn, r_outer, r_alter};
+output = {bestn, r_outer, r_alter, rmat};
