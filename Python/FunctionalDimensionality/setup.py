@@ -1,4 +1,7 @@
-"""Copyright 2018, Giles Greenway & Christiane Ahlheim.
+"""Copyright 2018.
+
+Authors: Christiane Ahlheim, Sebastian Bobadilla-Suarez, Kurt Braunlich,
+Giles Greenway, & Olivia Guest.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,8 +24,9 @@ setup(
     version='1.0.0',
     description='Estimate functional dimensionality for FMRI data',
     license='GPLv3',
-    author='Giles Richard Greenway',
-    author_email='g.greenway@ucl.ac.uk',
+    author='Christiane Ahlheim, Sebastian Bobadilla-Suarez, Kurt Braunlich,'
+    'Giles Greenway, & Olivia Guest',
+    author_email='b.love@ucl.ac.uk',
     packages=['funcdim'],
     install_requires=['nibabel', 'numpy', 'scipy', 'hdf5storage', 'six']
 )

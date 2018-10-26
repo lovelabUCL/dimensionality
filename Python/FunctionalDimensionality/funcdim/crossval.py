@@ -1,4 +1,7 @@
-"""Copyright 2018, Giles Greenway & Christiane Ahlheim.
+"""Copyright 2018.
+
+Authors: Christiane Ahlheim, Sebastian Bobadilla-Suarez, Kurt Braunlich,
+Giles Greenway, & Olivia Guest.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -61,19 +64,22 @@ def reconstruct(U, S, V, ncomp, testdata):
     """
     s_red = np.copy(S)
     # Set higher-dimensional components to zero.
+
     s_red[:, ncomp + 1:] = 0.0
     reconstruction = np.matmul(np.matmul(U, s_red), V.T)
     correlation, _ = pearsonr(reconstruction.ravel(), testdata.ravel())
     return correlation
 
 
-def svd_nested_crossval(data):
+def svd_nested_crossval(data, option='full'):
     """Estimate dimensionality for voxels for conditions and sessions.
 
     Arguments
     ---------
         data: n * m * o Numpy array of beta values for n voxels and m
             conditions over o sessions.
+        option: 'full' or 'mean'; default: 'full'.
+
 
     Returns
     -------
@@ -87,9 +93,18 @@ def svd_nested_crossval(data):
     n_beta, n_session = data.shape[1:]
     n_comp = n_beta - 1
     rmat = np.zeros((n_comp, n_session - 1, n_session))
-    bestn = np.zeros(n_session, dtype='int32')
-    r_outer = np.zeros(n_session)
-    r_alter = np.zeros(n_session)
+
+    if option == 'full':
+        bestn = np.zeros((n_session - 1, n_session), dtype='int32')
+        r_outer = np.zeros((n_session - 1, n_session))
+        r_alter = np.zeros((n_session - 1, n_session))
+    elif option == 'mean':
+        bestn = np.zeros(n_session, dtype='int32')
+        r_outer = np.zeros(n_session)
+        r_alter = np.zeros(n_session)
+    else:
+        raise ValueError('Unknown option: "' + str(option) +
+                         '"; "full" and "mean" are the only options.')
 
     for i_test in range(n_session):
         # Remove the data for the ith session to produce test and validation
@@ -111,15 +126,38 @@ def svd_nested_crossval(data):
                 rmat[comp, j_val, i_test] = reconstruct(Uval, Sval, Vval, comp,
                                                         data_val[:, :, j_val])
 
-        # Mean Fisher z-transformation:
-        meanr = np.mean(np.arctanh(rmat[:, :, i_test]), axis=1)
-        # The index with the greatest correlation corresponds to the best
-        # dimensionality, so the incremented index must be returned.
-        bestn[i_test] = np.argmax(meanr)
+            if option == 'full':
+                rmax = rmat[:, j_val, i_test]
 
-        U, S, V = make_components(data_val)
+                # The index with the greatest correlation corresponds to the
+                # best dimensionality, so the incremented index must be
+                # returned.
+                bestn[j_val, i_test] = np.argmax(rmax)
 
-        r_outer[i_test] = reconstruct(U, S, V, bestn[i_test], data_test)
-        r_alter[i_test] = reconstruct(U, S, V, n_comp - 1, data_test)
+                U, S, V = make_components(data_val)
+
+                r_outer[j_val, i_test] = reconstruct(U, S, V,
+                                                     bestn[j_val, i_test],
+                                                     data_test)
+                r_alter[j_val, i_test] = reconstruct(U, S, V, n_comp - 1,
+                                                     data_test)
+            elif option != 'mean':
+                raise ValueError('Unknown option: "' + str(option) +
+                                 '"; "full" and "mean" are the only options.')
+
+        if option == 'mean':
+            # Mean Fisher z-transformation:
+            meanr = np.mean(np.arctanh(rmat[:, :, i_test]), axis=1)
+            # The index with the greatest correlation corresponds to the best
+            # dimensionality, so the incremented index must be returned.
+            bestn[i_test] = np.argmax(meanr)
+
+            U, S, V = make_components(data_val)
+
+            r_outer[i_test] = reconstruct(U, S, V, bestn[i_test], data_test)
+            r_alter[i_test] = reconstruct(U, S, V, n_comp - 1, data_test)
+        elif option != 'full':
+            raise ValueError('Unknown option: "' + str(option) +
+                             '"; "full" and "mean" are the only options.')
 
     return (1 + bestn, r_outer, r_alter)

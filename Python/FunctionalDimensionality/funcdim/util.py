@@ -1,4 +1,7 @@
-"""Copyright 2018, Giles Greenway & Christiane Ahlheim.
+"""Copyright 2018.
+
+Authors: Christiane Ahlheim, Sebastian Bobadilla-Suarez, Kurt Braunlich,
+Giles Greenway, & Olivia Guest.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -74,3 +77,24 @@ def brains_from_spm(subject_path):
 def load_mask(mask_file):
     """Load mask."""
     return nib.load(mask_file).get_data() > 0
+
+
+def demo_data(functional_dims=4, nvoxels=64, nconditions=16, nruns=6,
+              nsubs=20):
+    """Generate demo data with a set dimensionality for tests and demo."""
+    # Check nvoxels is a cube:
+    cube_check = int(np.round(nvoxels**(1 / 3)))
+    if cube_check**3 != nvoxels:
+        raise ValueError('"nvoxels" must a cube: ' + str(nvoxels) +
+                         ' is not a cube')
+
+    # "data" has the shape (nvoxels, nconditions, nruns, nsubs), containing
+    # "beta" values for nvoxels
+    data = np.random.multivariate_normal(
+        np.zeros((nconditions,)), np.eye(nconditions), size=(nvoxels))
+    data[:, functional_dims:] = np.ones((data[:, functional_dims:].shape))
+    data = data.reshape((nvoxels, nconditions, 1))
+    data = np.tile(data, (nruns))
+    data = data.reshape((nvoxels, nconditions, nruns, 1))
+    data = np.tile(data, (nsubs))
+    return data
