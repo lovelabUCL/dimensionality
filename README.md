@@ -10,14 +10,12 @@
     - [Requirements](#requirements)
     - [Usage](#usage)
       - [ROI](#roi)
-      - [Searchlight](#searchlight)
     - [Demo](#demo)
   - [Python](#python)
     - [Requirements](#requirements-1)
     - [Installation](#installation)
     - [Usage](#usage-1)
       - [ROI](#roi-1)
-      - [Searchlight](#searchlight-1)
     - [Demo](#demo-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -51,7 +49,7 @@ Please cite this paper if you use this software (also see [CITATION.cff](https:/
 
 ## MATLAB
 
-Estimate the functional dimensionality in a ROI or a searchlight in MATLAB.
+Estimate the functional dimensionality in a ROI in MATLAB.
 
 ### Requirements
 
@@ -67,18 +65,6 @@ Estimate the functional dimensionality in a ROI or a searchlight in MATLAB.
 #### ROI
 
 `functional_dimensionality(wholebrain_all, mask)`
-
-#### Searchlight
-
-`functional_dimensionality(wholebrain_all, mask, 'sphere',<sphere_radius>)`
-
-`wholebrain_all`: Load your 1st level beta estimates as a cell of size `n_subject`, each with a matrix of size `n_voxel` x `n_conditions` x `n_runs`.
-
-`mask`: Path to mask.
-
-Currently, pre-whitening is implemented by passing in the full path to "SPM.mat", as "spmfile" eg:
-
-`functional_dimensionality(wholebrain_all, '/path/to/mask', 'spmfile','/path/to/SPM.mat')`
 
 ### Demo
 
@@ -173,35 +159,31 @@ The `wholebrain_all` data is passed in as an iterator of Numpy arrays of dimensi
 
 Each item in the dictionary will be an array with a single value for each subject, averaged over each session.
 
-#### Searchlight
-
-`functional_dimensionality(wholebrain_all, n_subjects, mask, sphere=<sphere_radius>, test=tfce_onesample, res=None)`
-For searchlights, if a sphere radius is specified, the results are corrected by applying threshold free cluster enhancement ([TFCE](https://www.ncbi.nlm.nih.gov/pubmed/18501637)) by default using a limited implementation based on the [Matlab version](https://github.com/markallenthornton/MatlabTFCE) by Mark Allen Thornton. To bypass this, users may set the `test` keyword argument to `None`, or pass in a function of their own. This should accept a Numpy array of dimensions `x_voxels` x `y_voxels` x `z_voxels` x `n_images` and return a single image as a Numpy array.
-
-Each item in the dictionary will be an array of voxel arrays, averaged over each session.
-
 ### Demo
 
-A small (&lt;1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "Python/demo_data" directory. This can be used as follows (or run the `demo.py` in `Python/FunctionalDimensionality`):
+A small (&lt;1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "Python/demo_data" directory. This can be used as follows (or run the `demo_real_data.py` in `Python/FunctionalDimensionality/demos/`):
 :
 
 ```python
 from funcdim.funcdim import functional_dimensionality
+
 import numpy as np
+# import random
 
 # load the sample data.
-data = np.load('demo_data/sample_data.npy')
+data = np.load('./demos/demo_data/sample_data.npy')
 # "data" has the shape (64, 16, 6, 20), containing beta values for 64 voxels,
 # 16 conditions, 6 sessions, 20 subjects.
+nsubs = 20
 
 # Create a 4*4*4 mask (all True) for the 64 voxels.
 mask = np.ones((4, 4, 4), dtype='bool')
 
 # Create an iterator over the 20 subjects.
-all_subjects = (data[:, :, :, i] for i in range(20))
+all_subjects = (data[:, :, :, i] for i in range(nsubs))
 
 # Find the dimensionality.
-results = functional_dimensionality(all_subjects, 20, mask)
+results = functional_dimensionality(all_subjects, nsubs, mask, option='full')
 
 print(results['bestn'].mean())
 ```
@@ -210,5 +192,5 @@ The result of running that last line:
 
 ```python
 >>> results['bestn'].mean()
-4.541666666666667
+5.01
 ```
