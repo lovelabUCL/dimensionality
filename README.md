@@ -37,6 +37,10 @@ Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the function
 
 Guidance for the Matlab and Python implementations is provided below.
 
+For those interested in an overview of how the method works, here's a brief description. The method tests all possible dimensionalities where each dimensionality corresponds to a model. The model that does the best on held out test data wins. The procedure uses nested training, validation, and test sets to evaluate models. Each model is trained on the training data, then evaluated on the validation data. The model that does the best of the validation data is then retrained on both the training and validation data and then tested on the held out test data. This held out test provides an unbiased evaluation of the winning model in terms of a Pearson correlation between the model's prediction and the actual data. According to the null hypothesis, this correlation should be zero.
+
+There are many such evaluations performed by the code. Each run plays the role of training, validation, and test set for all possible combinations. Therefore, a design with 5 runs will have 5 possible test runs X 4 possible arrangements of validation and training runs for 20 outputs. Each output consists of the subject number, which run was used as the the test set, winning model dimensionality, and the test correlation. When the optiona flag is set to "mean", the model does some aggregation for the user, following the method reported in Ahlheim and Love (2018), and there is only one output for each run. These outputs can then be used to determine statistical significance or to estimate the functional dimensionality (please see Ahlheim and Love, 2018).
+
 ## Citation
 
 Please cite this paper if you use this software (also see [CITATION.cff](https://github.com/lovelabUCL/dimensionality/blob/master/CITATION.cff) and [CITATION.bib](https://github.com/lovelabUCL/dimensionality/blob/master/CITATION.bib) for a BibTeX file):
