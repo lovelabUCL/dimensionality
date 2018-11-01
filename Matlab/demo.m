@@ -3,9 +3,11 @@ clear all; close all; clc;
 matfile = load('demo_data/sample_data.mat');
 [vox, cond, sessions, subjects] = size(matfile.sample_data);
 wholebrain_all = {};
+subject_IDs=[];
 for i = 1:subjects                   
     brain = matfile.sample_data(:,:,:,i);
     wholebrain_all{i} = brain;
+    subject_IDs = [subject_IDs i];
 end
 
 % select 'full' or 'mean' option:
@@ -15,20 +17,16 @@ end
 full = 1; 
 
 % separate estimates for each run
-[bestn_all,r_outer_all,r_alter_all,test_tfce]=functional_dimensionality(wholebrain_all, ...
-    'demo_data/sample_mask.img',full);
+[subject_IDs, test_runs, winning_models, test_correlations]=functional_dimensionality(wholebrain_all, ...
+    'demo_data/sample_mask.img',subject_IDs,full);
 
 % average over runs:
-for i_subject = 1:subjects
-    mean_r_outer(:, i_subject) = mean(r_outer_all{i_subject},1);
-    mean_r_alter(:, i_subject) = mean(r_alter_all{i_subject},1);
-    mean_bestn(:, i_subject)   = mean(bestn_all{i_subject},1);
-end
+median_winning_model = median(winning_models);
+median_test_correlation = median(test_correlations);
 
 % point estimate of best dimensionality:
-fprintf('bestn = %.2f\n',mean(mean_bestn(:)))
+fprintf('winning model overall = %.2f\n',median(median_winning_model(:)))
 
-
-% mean (full=0) = 4.54
-% full (full=1) = 5.01
 %%
+
+csvwrite('test', [subject_IDs, test_runs, winning_models, test_correlations])

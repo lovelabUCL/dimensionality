@@ -74,10 +74,10 @@ for i_subject = 1:n_subject
     [subject_ID, test_run, winning_model, test_correlation] = roi_estimate_dim(data, res, subject_IDs(i_subject), full);
 
     
-    test_runs = [test_runs; reshape(test_run, [numel(test_run),1])];
-    winning_models = [winning_models; reshape(winning_model, [numel(winning_model),1])];
-    test_correlations = [test_correlations; reshape(test_correlation, [numel(test_correlation),1])];
-    subject_IDs_output = [subject_IDs_output; repmat(subject_ID, [numel(test_run),1])];
+    test_runs = [test_runs reshape(test_run, [1,numel(test_run)])];
+    winning_models = [winning_models reshape(winning_model, [1,numel(winning_model)])];
+    test_correlations = [test_correlations reshape(test_correlation, [1,numel(test_correlation)])];
+    subject_IDs_output = [subject_IDs_output repmat(subject_ID, numel(test_run))];
         
 end
 

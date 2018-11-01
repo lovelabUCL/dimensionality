@@ -14,7 +14,12 @@ nibabel == 2.3.0
 # funcdim/funcdim.py: 23
 # funcdim/util.py: 21
 # tests/output.py: 2,3
+# tests/test.py: 5
 numpy == 1.11.0
+
+# demos/demo_real_data.py: 10
+# demos/demo_sim_data.py: 11
+pandas == 0.19.1
 
 # build/lib/funcdim/crossval.py: 19
 # build/lib/funcdim/funcdim.py: 22

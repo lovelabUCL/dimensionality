@@ -1,4 +1,4 @@
-function output = svd_nested_crossval(data,full)
+function output = svd_nested_crossval(data,subject_ID,full)
 %% “Copyright 2018, Christiane Ahlheim”
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
@@ -16,14 +16,14 @@ n_session = size(data,3);
 n_comp = n_beta-1;
 
 if full
-    r_outer = NaN([n_session-1, n_session,1]);
-    r_alter = NaN([n_session-1,n_session,1]);
-    bestn = NaN([n_session-1,n_session,1]);
+    winning_model = NaN([n_session-1, n_session,1]);
+    test_correlation = NaN([n_session-1,n_session,1]);
+    test_run = NaN([n_session-1,n_session,1]);
     rmat = NaN([n_comp,n_session-1,n_session]);
 else
-    r_outer = NaN([n_session,1]);
-    r_alter = NaN([n_session,1]);
-    bestn = NaN([n_session,1]);
+    winning_model = NaN([n_session,1]);
+    test_correlation = NaN([n_session,1]);
+    test_run = NaN([n_session,1]);
     rmat = NaN([n_comp,n_session-1,n_session]);
 end
     
@@ -45,26 +45,26 @@ for i_test = 1:n_session
         end
         
         if full % use dim estimate of each j_val
+            test_run(j_val,i_test) = i_test;
             % Step 2: Pick the dimensionality with the highest correlelation.
             rvec = rmat(:,j_val,i_test);
-            bestn(j_val,i_test) = find(rvec==max(rvec));
+            winning_model(j_val,i_test) = find(rvec==max(rvec));
             % Step 2: SVD and reconstruction of averaged training and validation data.
             [U,S,V] = make_components(data_val);
-            r_outer(j_val,i_test) = reconstruct(U,S,V,bestn(j_val,i_test),data_test(:));
-            r_alter(j_val,i_test) = reconstruct(U,S,V,n_comp,data_test(:));
+            test_correlation(j_val,i_test) = reconstruct(U,S,V,winning_model(j_val,i_test),data_test(:));
         end
     end
     if ~ full % choose best dim estimate by averaging over j_val
+        test_run(i_test) = i_test;
         % Step 2: Mean Fischer z-transform.
         meanr = mean(atanh(rmat(:,:,i_test)),2);
         % Step 2: Pick the dimensionality with the highest correlelation.
-        bestn(i_test) = find(meanr==max(meanr));
+        winning_model(i_test) = find(meanr==max(meanr));
         % Step 2: SVD and reconstruction of averaged training and validation data.
         [U,S,V] = make_components(data_val);
-        r_outer(i_test) = reconstruct(U,S,V,bestn(i_test),data_test(:));
-        r_alter(i_test) = reconstruct(U,S,V,n_comp,data_test(:));
+        test_correlation(i_test) = reconstruct(U,S,V,winning_model(i_test),data_test(:));
     end
 
 end
 
-output = {bestn, r_outer, r_alter, rmat};
+output = {subject_ID, test_run, winning_model, test_correlation};
