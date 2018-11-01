@@ -151,7 +151,8 @@ The `wholebrain_all` data is passed in as an iterator of Numpy arrays of dimensi
 -   `subject_ID`: subject identifier
 
 ```python
-functional_dimensionality(wholebrain_all, n_subjects, mask, subject_IDs=None, res=None, option='full')```
+functional_dimensionality(wholebrain_all, n_subjects, mask, subject_IDs=None, res=None, option='full')
+```
 
 ### Demo
 
