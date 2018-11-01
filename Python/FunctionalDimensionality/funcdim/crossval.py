@@ -71,7 +71,7 @@ def reconstruct(U, S, V, ncomp, testdata):
     return correlation
 
 
-def svd_nested_crossval(data, option='full'):
+def svd_nested_crossval(data, subject_ID, option='full'):
     """Estimate dimensionality for voxels for conditions and sessions.
 
     Arguments
@@ -80,28 +80,25 @@ def svd_nested_crossval(data, option='full'):
             conditions over o sessions.
         option: 'full' or 'mean'; default: 'full'.
 
-
     Returns
     -------
-        bestn: Array of best estimates of dimensionality for each session.
-        r_outer: Correlations between data for each session and the
-            best low-dimensional reconstruction of all other sessions.
-        r_alter: Correlations between data for each session and the
-            highest dimensional reconstruction of all other sessions.
+        subject_ID: Unique indentifier for each subject.
+        test_run: Which test set was used.
+        winning_model: Winning models/dimensionality.
+        test_correlation: The out-of-samplel correlation for the winning model.
 
     """
     n_beta, n_session = data.shape[1:]
     n_comp = n_beta - 1
     rmat = np.zeros((n_comp, n_session - 1, n_session))
+    test_run = []
 
     if option == 'full':
-        bestn = np.zeros((n_session - 1, n_session), dtype='int32')
-        r_outer = np.zeros((n_session - 1, n_session))
-        r_alter = np.zeros((n_session - 1, n_session))
+        winning_model = np.zeros((n_session - 1, n_session), dtype='int32')
+        test_correlation = np.zeros((n_session - 1, n_session))
     elif option == 'mean':
-        bestn = np.zeros(n_session, dtype='int32')
-        r_outer = np.zeros(n_session)
-        r_alter = np.zeros(n_session)
+        winning_model = np.zeros(n_session, dtype='int32')
+        test_correlation = np.zeros(n_session)
     else:
         raise ValueError('Unknown option: "' + str(option) +
                          '"; "full" and "mean" are the only options.')
@@ -127,37 +124,39 @@ def svd_nested_crossval(data, option='full'):
                                                         data_val[:, :, j_val])
 
             if option == 'full':
+                test_run.append(i_test + 1)
+
                 rmax = rmat[:, j_val, i_test]
 
                 # The index with the greatest correlation corresponds to the
                 # best dimensionality, so the incremented index must be
                 # returned.
-                bestn[j_val, i_test] = np.argmax(rmax)
+                winning_model[j_val, i_test] = np.argmax(rmax)
 
                 U, S, V = make_components(data_val)
 
-                r_outer[j_val, i_test] = reconstruct(U, S, V,
-                                                     bestn[j_val, i_test],
-                                                     data_test)
-                r_alter[j_val, i_test] = reconstruct(U, S, V, n_comp - 1,
-                                                     data_test)
+                test_correlation[j_val, i_test] = \
+                    reconstruct(
+                        U, S, V, winning_model[j_val, i_test], data_test)
             elif option != 'mean':
                 raise ValueError('Unknown option: "' + str(option) +
                                  '"; "full" and "mean" are the only options.')
 
         if option == 'mean':
+            test_run.append(i_test + 1)
+
             # Mean Fisher z-transformation:
             meanr = np.mean(np.arctanh(rmat[:, :, i_test]), axis=1)
             # The index with the greatest correlation corresponds to the best
             # dimensionality, so the incremented index must be returned.
-            bestn[i_test] = np.argmax(meanr)
+            winning_model[i_test] = np.argmax(meanr)
 
             U, S, V = make_components(data_val)
 
-            r_outer[i_test] = reconstruct(U, S, V, bestn[i_test], data_test)
-            r_alter[i_test] = reconstruct(U, S, V, n_comp - 1, data_test)
+            test_correlation[i_test] = \
+                reconstruct(U, S, V, winning_model[i_test], data_test)
         elif option != 'full':
             raise ValueError('Unknown option: "' + str(option) +
                              '"; "full" and "mean" are the only options.')
 
-    return (1 + bestn, r_outer, r_alter)
+    return (subject_ID, test_run, winning_model + 1, test_correlation)

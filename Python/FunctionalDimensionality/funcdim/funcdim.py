@@ -85,19 +85,22 @@ def pre_proc(data, res):
     return beta_norm - beta_norm.mean(axis=1).reshape(n_voxels, 1, n_sessions)
 
 
-def roi_estimator(data, res, option='full'):
+def roi_estimator(data, res, subject_IDs, option='full'):
     """ROI estimator."""
     if res is None:
-        bestn, r_outer, r_alter = svd_nested_crossval(data, option)
+        subject_ID, test_run, winning_model, test_correlation = \
+            svd_nested_crossval(data, subject_IDs, option)
     else:
-        bestn, r_outer, r_alter = \
-            svd_nested_crossval(pre_proc(data, res), option)
+        subject_ID, test_run, winning_model, test_correlation = \
+            svd_nested_crossval(pre_proc(data, res), subject_IDs, option)
 
-    return {'bestn': bestn, 'r_outer': r_outer, 'r_alter': r_alter}
+    return {'subject_ID': np.tile(subject_ID, len(test_run)),
+            'test_run': test_run, 'winning_model': winning_model,
+            'test_correlation': test_correlation}
 
 
 def functional_dimensionality(wholebrain_all, n_subjects, mask, res=None,
-                              option='full'):
+                              option='full', subject_IDs=None):
     """Estimate functional dimensionality.
 
     Arguments
@@ -108,8 +111,15 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, res=None,
         mask: Mask as an i * j * k Numpy array of booleans such that
             i * j * k = n_voxels.
         option: 'full' or 'mean'; default: 'full'.
+        subject_IDs: list of ID for each subject; default
+                     range(1, n_subjects + 1)
 
     """
+    if subject_IDs is None:
+        subject_IDs = range(1, n_subjects + 1)
+    else:
+        assert len(subject_IDs) == n_subjects
+
     option = [option for n in range(n_subjects)]
 
     iter_brain, first_brain = itertools.tee(wholebrain_all, 2)
@@ -126,21 +136,26 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, res=None,
     else:
         residuals = res
 
-    args = (brain for brain in zip(masked_brains, residuals, option))
+    args = (brain for brain in zip(
+        masked_brains, residuals, subject_IDs, option))
     estimator_pool = Pool()
     estimates = estimator_pool.starmap(roi_estimator, args)
 
-    bestn_all = []
-    r_outer_all = []
-    r_alter_all = []
+    subject_ID = []
+    test_run = []
+    winning_model = []
+    test_correlation = []
 
     for estimate in estimates:
-        bestn_all.append(estimate['bestn'])
-        r_outer_all.append(estimate['r_outer'])
-        r_alter_all.append(estimate['r_alter'])
+        subject_ID.append(estimate['subject_ID'])
+        test_run.append(estimate['test_run'])
+        winning_model.append(estimate['winning_model'])
+        test_correlation.append(estimate['test_correlation'])
 
-    results = {'bestn': np.asarray(bestn_all),
-               'r_outer': np.asarray(r_outer_all),
-               'r_alter': np.asarray(r_alter_all)}
+    results = {'subject_ID': np.asarray(subject_ID).flatten(),
+               'test_run': np.asarray(test_run).flatten(),
+               'winning_model': np.asarray(winning_model).flatten(),
+               'test_correlation': np.asarray(test_correlation).flatten()
+               }
 
     return results
