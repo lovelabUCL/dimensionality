@@ -143,8 +143,8 @@ Within the Python interpreter:
 from funcdim.funcdim import functional_dimensionality
 ```
 
-The function takes the arguments: wholebrain_all, n_subjects, mask, subject_IDs=None, res=None.
-The `wholebrain_all` data is passed in as an iterator of Numpy arrays of dimensions `n_voxels` x `n_conditions` x `n_runs` over `n_subjects`, which may be a Numpy array of dimensions `n_subjects` x `n_voxels` x `n_conditions` x `n_runs`. For pre-whitening, residuals may be passed in a similar format using the keyword argument `res`. A mask should be passed in as a boolean Numpy array, which can be produced using [Nibabel](http://nipy.org/nibabel/). The results are returned in a dictionary with keys:
+The function takes the arguments: wholebrain_all, n_subjects, mask, subject_IDs=None, res=None, option='full'.
+The `wholebrain_all` data is passed in as an iterator of Numpy arrays of dimensions `n_voxels` x `n_conditions` x `n_runs` over `n_subjects`, which may be a Numpy array of dimensions `n_subjects` x `n_voxels` x `n_conditions` x `n_runs`. For pre-whitening, residuals may be passed in a similar format using the keyword argument `res`. A mask should be passed in as a boolean Numpy array, which can be produced using [Nibabel](http://nipy.org/nibabel/). The keyword argument `option` accepts either 'full' (return separate estimates for each inner CV loop) or 'mean' (estimate best dimensionality by averaging over inner CV loop). The results are returned in a dictionary with keys:
 
 -   winning_model: best dimensionality
 -   test_correlation: correlation for winning model for out-of-sample test run
