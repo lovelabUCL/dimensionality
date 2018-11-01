@@ -111,12 +111,12 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, res=None,
         mask: Mask as an i * j * k Numpy array of booleans such that
             i * j * k = n_voxels.
         option: 'full' or 'mean'; default: 'full'.
-        subject_IDs: list of ID for each subject; default
+        subject_IDs: unique identifiers for each subject; default
                      range(1, n_subjects + 1)
 
     """
     if subject_IDs is None:
-        subject_IDs = range(1, n_subjects + 1)
+        subject_IDs = [str(i) for i in range(1, n_subjects + 1)]
     else:
         assert len(subject_IDs) == n_subjects
 

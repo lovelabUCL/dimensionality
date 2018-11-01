@@ -94,7 +94,6 @@ def demo_data(functional_dims=4, nvoxels=64, nconditions=20, nruns=6,
     data = np.random.multivariate_normal(
         np.zeros((nconditions,)), np.eye(nconditions), size=(nvoxels))
     data[:, functional_dims:] = np.zeros((data[:, functional_dims:].shape))
-    data[:, functional_dims:] += sys.float_info.min
     data = data.reshape((nvoxels, nconditions, 1))
     data = np.tile(data, (nruns))
     data = data.reshape((nvoxels, nconditions, nruns, 1))

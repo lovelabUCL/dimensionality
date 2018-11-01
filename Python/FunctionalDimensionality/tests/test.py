@@ -36,7 +36,11 @@ class TestRealData(unittest.TestCase):  # noqa:D101
         # Loop through to compare the contents of both dictionaries:
         for (key, value) in functional_dimensionality(
                 all_subjects, self.nsubs, self.mask, option=option).items():
-            self.assertTrue(np.allclose(value, output.dictionary_full[key]))
+            if key == 'subject_ID':
+                self.assertTrue((value == output.dictionary_full[key]).all())
+            else:
+                self.assertTrue(np.allclose(value,
+                                            output.dictionary_full[key]))
 
     def test_mean_keys(self):  # noqa:D102
         # Create an iterator over the 20 subjects.
@@ -56,7 +60,11 @@ class TestRealData(unittest.TestCase):  # noqa:D101
         # Loop through to compare the contents of both dictionaries:
         for (key, value) in functional_dimensionality(
                 all_subjects, self.nsubs, self.mask, option=option).items():
-            self.assertTrue(np.allclose(value, output.dictionary_mean[key]))
+            if key == 'subject_ID':
+                self.assertTrue((value == output.dictionary_mean[key]).all())
+            else:
+                self.assertTrue(np.allclose(value,
+                                            output.dictionary_mean[key]))
 
 
 class TestSimData(unittest.TestCase):  # noqa:D101
@@ -68,32 +76,32 @@ class TestSimData(unittest.TestCase):  # noqa:D101
         self.mask = np.ones((mask_dim, mask_dim, mask_dim), dtype='bool')
 
     def test_full(self):  # noqa:D102
-        for d in range(1, 32, 5):
+        for d in range(1, 10):
             # Get some randomly generated data with d dimensions as ground
             # truth:
             data = demo_data(nvoxels=self.nvoxels, nsubs=self.nsubs,
-                             functional_dims=d, nconditions=d + 1)
+                             functional_dims=d, nconditions=16)
             # Create an iterator over the 20 subjects.
             all_subjects = (data[:, :, :, i] for i in range(20))
             option = 'full'
 
             self.assertEqual(d, functional_dimensionality(
                 all_subjects, self.nsubs, self.mask, option=option)
-                ['bestn'].mean())
+                ['winning_model'].mean())
 
     def test_mean(self):  # noqa:D102
-        for d in range(1, 32, 5):
+        for d in range(1, 10):
             # Get some randomly generated data with d dimensions as ground
             # truth:
             data = demo_data(nvoxels=self.nvoxels, nsubs=self.nsubs,
-                             functional_dims=d, nconditions=d + 1)
+                             functional_dims=d, nconditions=16)
             # Create an iterator over the 20 subjects.
             all_subjects = (data[:, :, :, i] for i in range(20))
             option = 'mean'
 
             self.assertEqual(d, functional_dimensionality(
                 all_subjects, self.nsubs, self.mask, option=option)
-                ['bestn'].mean())
+                ['winning_model'].mean())
 
 if __name__ == '__main__':
     unittest.main()

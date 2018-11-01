@@ -26,7 +26,7 @@ all_subjects = (data[:, :, :, i] for i in range(nsubs))
 
 # Find the dimensionality.
 results = functional_dimensionality(all_subjects, nsubs, mask,
-                                    subject_IDs=subject_IDs)
+                                    subject_IDs=subject_IDs, option='mean')
 
 # Put the output results into a dataframe and save as a CSV file.
 df = pd.DataFrame.from_dict(results)

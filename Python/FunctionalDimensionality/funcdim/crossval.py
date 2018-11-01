@@ -145,8 +145,7 @@ def svd_nested_crossval(data, subject_ID, option='full'):
         if option == 'mean':
             test_run.append(i_test + 1)
 
-            # Mean Fisher z-transformation:
-            meanr = np.mean(np.arctanh(rmat[:, :, i_test]), axis=1)
+            meanr = np.mean(rmat[:, :, i_test], axis=1)
             # The index with the greatest correlation corresponds to the best
             # dimensionality, so the incremented index must be returned.
             winning_model[i_test] = np.argmax(meanr)
