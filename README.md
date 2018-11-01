@@ -153,7 +153,7 @@ The `wholebrain_all` data is passed in as an iterator of Numpy arrays of dimensi
 
 #### ROI
 
-`functional_dimensionality(wholebrain_all, n_subjects, mask, subject_IDs=None, res=None)`
+`functional_dimensionality(wholebrain_all, n_subjects, mask, subject_IDs=None, res=None, option='full')`
 
 ### Demo
 
