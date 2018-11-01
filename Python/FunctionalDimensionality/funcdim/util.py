@@ -21,7 +21,6 @@ import nibabel as nib
 import numpy as np
 import os
 from scipy.io import loadmat
-import sys
 
 
 def load_spm(spm_path):
