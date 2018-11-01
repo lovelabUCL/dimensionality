@@ -1,46 +1,86 @@
-Functional Dimensionality
-=========================
+# Functional Dimensionality
 
-Authors
--------
+[![Build Status](https://travis-ci.org/lovelabUCL/dimensionality.svg?branch=master)](https://travis-ci.org/lovelabUCL/dimensionality)
 
--  **Christiane Ahlheim**: wrote original codebase in Matlab.
+## Authors
 
--  **Giles Greenway**: wrote original codebase in Python and optimised
-   Matlab code.
+-   **Christiane Ahlheim**: wrote original codebase in Matlab.
 
--  **Sebastian Bobadilla-Suarez, Kurt Braunlich, & Olivia Guest**:
-   modified Python and Matlab codebases for new features and release.
+-   **Giles Greenway**: wrote original codebase in Python and optimised Matlab code.
 
-Overview
---------
+-   **Sebastian Bobadilla-Suarez, Kurt Braunlich, & Olivia Guest**: modified Python and Matlab codebases for new features and release.
 
-This is a method implemented in both Matlab and Python to estimate the
-functional dimensionality of (neural) data, as described in **Estimating
-the functional dimensionality of neural representations** Ahlheim, C. &
-`Love, B.C. <http://bradlove.org>`__ (2017). `Estimating the functional
-dimensionality of neural
-representations <https://www.sciencedirect.com/science/article/pii/S1053811918305226>`__.
-Neuroimage, DOI:
-`10.1016/j.neuroimage.2018.06.015 <https://doi.org/10.1016/j.neuroimage.2018.06.015>`__.
+## Overview
+
+This is a method implemented in both Matlab and Python to estimate the functional dimensionality of (neural) data, as described in
+**Estimating the functional dimensionality of neural representations**
+Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the functional dimensionality of neural representations](https://www.sciencedirect.com/science/article/pii/S1053811918305226). Neuroimage, DOI: [10.1016/j.neuroimage.2018.06.015](https://doi.org/10.1016/j.neuroimage.2018.06.015).
 
 Guidance for the Matlab and Python implementations is provided below.
 
-Citation
---------
+## Citation
 
-Please cite this paper if you use this software (also see
-`CITATION.cff <https://github.com/lovelabUCL/dimensionality/blob/master/CITATION.cff>`__
-and
-`CITATION.bib <https://github.com/lovelabUCL/dimensionality/blob/master/CITATION.bib>`__
-for a BibTeX file):
+Please cite this paper if you use this software (also see [CITATION.cff](https://github.com/lovelabUCL/dimensionality/blob/master/CITATION.cff) and [CITATION.bib](https://github.com/lovelabUCL/dimensionality/blob/master/CITATION.bib) for a BibTeX file):
 
--  **Estimating the functional dimensionality of neural
-   representations** Ahlheim, C. & `Love, B.C. <http://bradlove.org>`__
-   (2017). `Estimating the functional dimensionality of neural
-   representations <https://www.sciencedirect.com/science/article/pii/S1053811918305226>`__.
-   Neuroimage, DOI:
-   `10.1016/j.neuroimage.2018.06.015 <https://doi.org/10.1016/j.neuroimage.2018.06.015>`__.
+-   **Estimating the functional dimensionality of neural representations**
+    Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the functional dimensionality of neural representations](https://www.sciencedirect.com/science/article/pii/S1053811918305226). Neuroimage, DOI: [10.1016/j.neuroimage.2018.06.015](https://doi.org/10.1016/j.neuroimage.2018.06.015).
+
+## MATLAB
+
+Estimate the functional dimensionality in a ROI in MATLAB.
+
+### Requirements
+
+-   [SPM12](http://www.fil.ion.ucl.ac.uk/spm/software/spm12/).
+-   [The RSA-toolbox](https://www.mrc-cbu.cam.ac.uk/methods-and-resources/toolboxes/).
+-   [Matlab Stan](http://mc-stan.org/users/interfaces/matlab-stan) (only needed to run the hierarchical model).
+-   Model comparison could be done using [PSIS](https://github.com/avehtari/PSIS).
+-   The `covdiag` function from [https://github.com/jooh/pilab](pilab) (shrinkage of the residual covariance matrix during pre-whitening).
+
+### Usage
+
+#### ROI
+
+`functional_dimensionality(wholebrain_all, mask, subject_IDs, full)`
+
+### Demo
+
+A small (&lt;1Mb) amount of simulated data with nominal dimensionality 4 for 64 voxels and 6 sessions for 20 subjects is provided in the "Matlab/demo_data" directory, along with a 4x4x4 mask with all voxels set to "true". This can be used as follows:
+
+```matlab
+clear all; close all; clc;
+
+matfile = load('demo_data/sample_data.mat');
+[vox, cond, sessions, subjects] = size(matfile.sample_data);
+wholebrain_all = {};
+subject_IDs=[];
+for i = 1:subjects                   
+    brain = matfile.sample_data(:,:,:,i);
+    wholebrain_all{i} = brain;
+    subject_IDs = [subject_IDs i];
+end
+
+% select 'full' or 'mean' option:
+%   - full=0: estimate best dimensionality by averaging over inner CV loop. (as
+%     in paper)
+%   - full=1: return separate estimates for each inner CV loop. 
+full = 1; 
+
+% separate estimates for each run:
+[subject_IDs, test_runs, winning_models, test_correlations]=functional_dimensionality(wholebrain_all, ...
+    'demo_data/sample_mask.img',subject_IDs,full);
+
+% average over runs:
+median_winning_model = median(winning_models);
+median_test_correlation = median(test_correlations);
+
+% point estimate of best dimensionality:
+fprintf('winning model overall = %.2f\n',median(median_winning_model(:)))
+
+% write results to CSV file:
+csvwrite('demo_output.csv', [subject_IDs, test_runs, winning_models, test_correlations])
+```      
+
 
 ## Python
 
