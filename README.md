@@ -155,7 +155,7 @@ functional_dimensionality(wholebrain_all, n_subjects, mask, subject_IDs=None, re
 
 ### Demo
 
-A small (&lt;1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "Python/demo_data" directory. This can be used as follows (or run the `demo_real_data.py` in `Python/FunctionalDimensionality/demos/`):
+A small (<1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "Python/demo_data" directory. This can be used as follows (or run the `demo_real_data.py` in `Python/FunctionalDimensionality/demos/`):
 :
 
 ```python
