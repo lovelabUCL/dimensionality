@@ -1,9 +1,8 @@
 """Testing."""
 
-from funcdim.crossval import make_components
-from funcdim.crossval import reconstruct
-from funcdim.funcdim import functional_dimensionality
-from funcdim.util import demo_data
+import funcdim.crossval
+import funcdim.funcdim
+import funcdim.util
 import numpy as np
 import output
 from scipy.stats import pearsonr
@@ -27,7 +26,7 @@ class TestRealData(unittest.TestCase):  # noqa:D101
         option = 'full'
 
         # Check the keys are identical.
-        self.assertEqual(sorted(functional_dimensionality(
+        self.assertEqual(sorted(funcdim.funcdim.functional_dimensionality(
             all_subjects, 20, self.mask, option=option).keys()),
             sorted(output.dictionary_full.keys()))
 
@@ -37,7 +36,7 @@ class TestRealData(unittest.TestCase):  # noqa:D101
         option = 'full'
 
         # Loop through to compare the contents of both dictionaries:
-        for (key, value) in functional_dimensionality(
+        for (key, value) in funcdim.funcdim.functional_dimensionality(
                 all_subjects, self.nsubs, self.mask, option=option).items():
             if key == 'subject_ID':
                 self.assertTrue((value == output.dictionary_full[key]).all())
@@ -51,7 +50,7 @@ class TestRealData(unittest.TestCase):  # noqa:D101
         option = 'mean'
 
         # Check the keys are identical.
-        self.assertEqual(sorted(functional_dimensionality(
+        self.assertEqual(sorted(funcdim.funcdim.functional_dimensionality(
             all_subjects, 20, self.mask, option=option).keys()),
             sorted(output.dictionary_mean.keys()))
 
@@ -61,7 +60,7 @@ class TestRealData(unittest.TestCase):  # noqa:D101
         option = 'mean'
 
         # Loop through to compare the contents of both dictionaries:
-        for (key, value) in functional_dimensionality(
+        for (key, value) in funcdim.funcdim.functional_dimensionality(
                 all_subjects, self.nsubs, self.mask, option=option).items():
             if key == 'subject_ID':
                 self.assertTrue((value == output.dictionary_mean[key]).all())
@@ -82,13 +81,13 @@ class TestSimData(unittest.TestCase):  # noqa:D101
         for d in range(1, 10):
             # Get some randomly generated data with d dimensions as ground
             # truth:
-            data = demo_data(nvoxels=self.nvoxels, nsubs=self.nsubs,
-                             functional_dims=d, nconditions=16)
+            data = funcdim.util.demo_data(nvoxels=self.nvoxels, nsubs=self.nsubs,
+                                          functional_dims=d, nconditions=16)
             # Create an iterator over the 20 subjects.
             all_subjects = (data[:, :, :, i] for i in range(20))
             option = 'full'
 
-            self.assertEqual(d, functional_dimensionality(
+            self.assertEqual(d, funcdim.funcdim.functional_dimensionality(
                 all_subjects, self.nsubs, self.mask, option=option)
                 ['winning_model'].mean())
 
@@ -96,13 +95,13 @@ class TestSimData(unittest.TestCase):  # noqa:D101
         for d in range(1, 10):
             # Get some randomly generated data with d dimensions as ground
             # truth:
-            data = demo_data(nvoxels=self.nvoxels, nsubs=self.nsubs,
-                             functional_dims=d, nconditions=16)
+            data = funcdim.util.demo_data(nvoxels=self.nvoxels, nsubs=self.nsubs,
+                                          functional_dims=d, nconditions=16)
             # Create an iterator over the 20 subjects.
             all_subjects = (data[:, :, :, i] for i in range(20))
             option = 'mean'
 
-            self.assertEqual(d, functional_dimensionality(
+            self.assertEqual(d, funcdim.funcdim.functional_dimensionality(
                 all_subjects, self.nsubs, self.mask, option=option)
                 ['winning_model'].mean())
 
@@ -119,7 +118,7 @@ class TestCrossVal(unittest.TestCase):  # noqa:D101
         self.mask = np.ones((4, 4, 4), dtype='bool')
 
     def test_make_components(self):  # noqa:D102
-        mc_u, mc_diag, mc_v = make_components(self.data)
+        mc_u, mc_diag, mc_v = funcdim.crossval.make_components(self.data)
         u, diag, v = np.linalg.svd(
             np.mean(self.data, axis=2), full_matrices=False)
 
@@ -144,14 +143,15 @@ class TestCrossVal(unittest.TestCase):  # noqa:D101
                 data_val_train = np.delete(data_val, j_val, axis=2)
 
                 # Facorize the mean of the training set over all sessions.
-                Uval, Sval, Vval = make_components(data_val_train)
+                Uval, Sval, Vval = funcdim.crossval.make_components(
+                    data_val_train)
 
                 # Find the correlations between reconstructions of the training
                 # set for each possible dimensionality and the test set.
                 for comp in range(n_comp):
                     rmat[comp, j_val, i_test] = \
-                        reconstruct(Uval, Sval, Vval, comp,
-                                    data_val[:, :, j_val])
+                        funcdim.crossval.reconstruct(Uval, Sval, Vval, comp,
+                                                     data_val[:, :, j_val])
                     cor = rmat[comp, j_val, i_test]
                     s_red = np.copy(Sval)
                     # Set higher-dimensional components to zero.
