@@ -143,18 +143,17 @@ Within the Python interpreter:
 from funcdim.funcdim import functional_dimensionality
 ```
 
-The function takes the arguments: wholebrain_all, n_subjects, mask, sphere=None, res=None, test.
+The function takes the arguments: wholebrain_all, n_subjects, mask, subject_IDs=None, res=None.
 The `wholebrain_all` data is passed in as an iterator of Numpy arrays of dimensions `n_voxels` x `n_conditions` x `n_runs` over `n_subjects`, which may be a Numpy array of dimensions `n_subjects` x `n_voxels` x `n_conditions` x `n_runs`. For pre-whitening, residuals may be passed in a similar format using the keyword argument `res`. A mask should be passed in as a boolean Numpy array, which can be produced using [Nibabel](http://nipy.org/nibabel/). The results are returned in a dictionary with keys:
 
--   bestn, best dimensionality
--   r_outer, lowest correlation
--   r_alter, highest correlation
+-   winning_model: best dimensionality
+-   test_correlation: correlation for winning model for out-of-sample test run
+-   test_run: indices for the test run
+-   subject_ID: subject identifier
 
 #### ROI
 
 `functional_dimensionality(wholebrain_all, n_subjects, mask, subject_IDs=None, res=None)`
-
-Each item in the dictionary will be an array with a single value for each subject, averaged over each session.
 
 ### Demo
 
