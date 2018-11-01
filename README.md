@@ -46,7 +46,7 @@ There are many such evaluations performed by the code. Each run plays the role o
 Please cite this paper if you use this software (also see [CITATION.cff](https://github.com/lovelabUCL/dimensionality/blob/master/CITATION.cff) and [CITATION.bib](https://github.com/lovelabUCL/dimensionality/blob/master/CITATION.bib) for a BibTeX file):
 
 -   **Estimating the functional dimensionality of neural representations**
-    Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2017). [Estimating the functional dimensionality of neural representations](https://www.sciencedirect.com/science/article/pii/S1053811918305226). Neuroimage, DOI: [10.1016/j.neuroimage.2018.06.015](https://doi.org/10.1016/j.neuroimage.2018.06.015).
+    Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2018). [Estimating the functional dimensionality of neural representations](https://www.sciencedirect.com/science/article/pii/S1053811918305226). Neuroimage, DOI: [10.1016/j.neuroimage.2018.06.015](https://doi.org/10.1016/j.neuroimage.2018.06.015).
 
 ## MATLAB
 
