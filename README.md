@@ -56,7 +56,7 @@ Please cite this paper if you use this software (also see [CITATION.cff](https:/
 -   [The RSA-toolbox](https://www.mrc-cbu.cam.ac.uk/methods-and-resources/toolboxes/).
 -   [Matlab Stan](http://mc-stan.org/users/interfaces/matlab-stan) (only needed to run the hierarchical model).
 -   Model comparison could be done using [PSIS](https://github.com/avehtari/PSIS).
--   The `covdiag` function from [https://github.com/jooh/pilab](pilab) (shrinkage of the residual covariance matrix during pre-whitening).
+-   The `covdiag` function from [https://github.com/jooh/pilab](https://github.com/jooh/pilab) (shrinkage of the residual covariance matrix during pre-whitening).
 
 ### Usage
 
