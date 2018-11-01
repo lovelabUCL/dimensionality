@@ -127,7 +127,7 @@ pip install .
 
 Please use Python 3, i.e., make sure your `python` command is calling python 3:
 
-```python
+```
 python --version
 Python 3.x.x
 ```
