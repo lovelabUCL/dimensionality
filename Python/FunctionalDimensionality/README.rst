@@ -42,114 +42,97 @@ for a BibTeX file):
    Neuroimage, DOI:
    `10.1016/j.neuroimage.2018.06.015 <https://doi.org/10.1016/j.neuroimage.2018.06.015>`__.
 
-Python
-------
+## Python
 
-Requirements
-~~~~~~~~~~~~
+### Requirements
 
--  Python 3
--  `Nibabel <http://nipy.org/nibabel/>`__
--  `Numpy <http://www.numpy.org/>`__
--  `Scipy <https://www.scipy.org/>`__
+-   Python 3
+-   [Nibabel](http://nipy.org/nibabel/)
+-   [Numpy](http://www.numpy.org/)
+-   [Scipy](https://www.scipy.org/)
 
-More info in
-`requirements.txt <https://github.com/lovelabUCL/dimensionality/blob/master/Python/FunctionalDimensionality/requirements.txt>`__.
+More info in [requirements.txt](https://github.com/lovelabUCL/dimensionality/blob/master/Python/FunctionalDimensionality/requirements.txt).
 
-Installation
-~~~~~~~~~~~~
+### Installation
 
-If you want to install this to use as a library please follow the
-instructions below, if you want to modify this code to use as a basis
-for your own method please
-`clone <https://help.github.com/articles/cloning-a-repository/>`__ this
-repository instead.
+If you want to install this to use as a library please follow the instructions below, if you want to modify this code to use as a basis for your own method please [clone](https://help.github.com/articles/cloning-a-repository/) this repository instead.
 
-From within the ``FunctionalDimensionality`` directory, and preferably
-within a `Virtualenv <https://virtualenv.pypa.io/en/stable/>`__, install
-as follows:
+From within the `FunctionalDimensionality` directory, and preferably within a [Virtualenv](https://virtualenv.pypa.io/en/stable/), install as follows:
 
-.. code:: python
+```python
+python setup.py build sdist
+pip install .
+```
 
-   python setup.py build sdist
-   pip install .
+Please use Python 3, i.e., make sure your `python` command is calling python 3:
 
-Please use Python 3, i.e., make sure your ``python`` command is calling
-python 3:
+```python
+python --version
+Python 3.x.x
+```
 
-.. code:: python
+If not, use `python3` where we use `python` in all examples herein. If you don't have that command, please [install Python 3](https://www.python.org/downloads/).
 
-   python --version
-   Python 3.x.x
-
-If not, use ``python3`` where we use ``python`` in all examples herein.
-If you don’t have that command, please `install Python
-3 <https://www.python.org/downloads/>`__.
-
-Usage
-~~~~~
+### Usage
 
 Within the Python interpreter:
 
-.. code:: python
+```python
+from funcdim.funcdim import functional_dimensionality
+```
 
-   from funcdim.funcdim import functional_dimensionality
+The function takes the arguments: wholebrain_all, n_subjects, mask, subject_IDs=None, res=None, option='full'.
+The `wholebrain_all` data is passed in as an iterator of Numpy arrays of dimensions `n_voxels` x `n_conditions` x `n_runs` over `n_subjects`, which may be a Numpy array of dimensions `n_subjects` x `n_voxels` x `n_conditions` x `n_runs`. For pre-whitening, residuals may be passed in a similar format using the keyword argument `res`. A mask should be passed in as a boolean Numpy array, which can be produced using [Nibabel](http://nipy.org/nibabel/). The keyword argument `option` accepts either 'full' (return separate estimates for each inner CV loop) or 'mean' (estimate best dimensionality by averaging over inner CV loop). The results are returned in a dictionary with keys:
 
-The function takes the arguments: wholebrain_all, n_subjects, mask,
-sphere=None, res=None, test. The ``wholebrain_all`` data is passed in as
-an iterator of Numpy arrays of dimensions ``n_voxels`` x
-``n_conditions`` x ``n_runs`` over ``n_subjects``, which may be a Numpy
-array of dimensions ``n_subjects`` x ``n_voxels`` x ``n_conditions`` x
-``n_runs``. For pre-whitening, residuals may be passed in a similar
-format using the keyword argument ``res``. A mask should be passed in as
-a boolean Numpy array, which can be produced using
-`Nibabel <http://nipy.org/nibabel/>`__. The results are returned in a
-dictionary with keys:
+-   winning_model: best dimensionality
+-   test_correlation: correlation for winning model for out-of-sample test run
+-   test_run: indices for the test run
+-   subject_ID: subject identifier
 
--  bestn, mean best dimensionality
--  r_outer, mean lowest correlation
--  r_alter, mean highest correlation
+#### ROI
 
-ROI
-^^^
+`functional_dimensionality(wholebrain_all, n_subjects, mask, subject_IDs=None, res=None, option='full')`
 
-``functional_dimensionality(wholebrain_all, n_subjects, mask, res=None)``
+### Demo
 
-Each item in the dictionary will be an array with a single value for
-each subject, averaged over each session.
-
-Demo
-~~~~
-
-A small (<1Mb) ammount of simulated data with nominal dimensionality 4
-is provided in the “Python/demo_data” directory. This can be used as
-follows (or run the ``demo.py`` in ``Python/FunctionalDimensionality``):
+A small (&lt;1Mb) ammount of simulated data with nominal dimensionality 4 is provided in the "Python/demo_data" directory. This can be used as follows (or run the `demo_real_data.py` in `Python/FunctionalDimensionality/demos/`):
 :
 
-.. code:: python
+```python
+from funcdim.funcdim import functional_dimensionality
+import numpy as np
+import pandas as pd
 
-   from funcdim.funcdim import functional_dimensionality
-   import numpy as np
+# load the sample data.
+data = np.load('./demos/demo_data/sample_data.npy')
+# "data" has the shape (64, 16, 6, 20), containing beta values for 64 voxels,
+# 16 conditions, 6 sessions, 20 subjects.
+nsubs = 20
 
-   # load the sample data.
-   data = np.load('demo_data/sample_data.npy')
-   # "data" has the shape (64, 16, 6, 20), containing beta values for 64 voxels,
-   # 16 conditions, 6 sessions, 20 subjects.
+# Create the subject IDs.
+subject_IDs = [str(i) for i in range(1, nsubs + 1)]
 
-   # Create a 4*4*4 mask (all True) for the 64 voxels.
-   mask = np.ones((4, 4, 4), dtype='bool')
+# Create a 4*4*4 mask (all True) for the 64 voxels.
+mask = np.ones((4, 4, 4), dtype='bool')
 
-   # Create an iterator over the 20 subjects.
-   all_subjects = (data[:, :, :, i] for i in range(20))
+# Create an iterator over the 20 subjects.
+all_subjects = (data[:, :, :, i] for i in range(nsubs))
 
-   # Find the dimensionality.
-   results = functional_dimensionality(all_subjects, 20, mask)
+# Find the dimensionality.
+results = functional_dimensionality(all_subjects, nsubs, mask,
+                                    subject_IDs=subject_IDs)
 
-   print(results['bestn'].mean())
+# Put the output results into a dataframe and save as a CSV file.
+df = pd.DataFrame.from_dict(results)
+df.to_csv('./demos/demo_data/demo_real_data_output.csv')
+
+# Show the median dimensionality:
+print(df['winning_model'].median())
+```
 
 The result of running that last line:
 
-.. code:: python
-
-   >>> results['bestn'].mean()
-   4.541666666666667
+```python
+>>> df['winning_model'].median()
+4.0
+```
