@@ -63,7 +63,7 @@ Estimate the functional dimensionality in a ROI in MATLAB.
 
 #### ROI
 
-`functional_dimensionality(wholebrain_all, mask, subject_IDs,full)`
+`functional_dimensionality(wholebrain_all, mask, subject_IDs, full)`
 
 ### Demo
 
