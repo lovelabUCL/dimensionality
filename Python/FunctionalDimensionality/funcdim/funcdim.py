@@ -110,6 +110,7 @@ def functional_dimensionality(wholebrain_all, n_subjects, mask, res=None,
             n_subjects * n_voxels * n_conditions * n_sessions array.
         mask: Mask as an i * j * k Numpy array of booleans such that
             i * j * k = n_voxels.
+        res: Residuals.
         option: 'full' or 'mean'; default: 'full'.
         subject_IDs: unique identifiers for each subject; default
                      range(1, n_subjects + 1)

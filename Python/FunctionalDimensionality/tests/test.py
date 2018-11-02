@@ -36,12 +36,30 @@ class TestRealData(unittest.TestCase):  # noqa:D101
         res = np.random.random(data.shape)
         self.assertEqual(pre_proc(data, res).shape, data.shape)
 
-    def test_roi_estimator(self):  # noqa:D102
+    def test_roi_estimator_res(self):  # noqa:D102
         data = self.data[0]
         res = np.random.random(data.shape)
         roi_output = roi_estimator(data, res, self.subject_IDs, option='full')
         subject_ID, test_run, winning_model, test_correlation =\
             svd_nested_crossval(pre_proc(data, res), self.subject_IDs,
+                                option='full')
+        svd_output = {'subject_ID': np.tile(subject_ID, len(test_run)),
+                      'test_run': test_run, 'winning_model': winning_model,
+                      'test_correlation': test_correlation}
+        # Check the keys are identical.
+        self.assertEqual(sorted(roi_output.keys()), sorted(svd_output.keys()))
+        # Loop through to compare the contents of both dictionaries:
+        for (key, value) in roi_output.items():
+            if key == 'subject_ID':
+                self.assertTrue((value == svd_output[key]).all())
+            else:
+                self.assertTrue(np.allclose(value, svd_output[key]))
+
+    def test_roi_estimator_no_res(self):  # noqa:D102
+        data = self.data[0]
+        roi_output = roi_estimator(data, None, self.subject_IDs, option='full')
+        subject_ID, test_run, winning_model, test_correlation =\
+            svd_nested_crossval(data, self.subject_IDs,
                                 option='full')
         svd_output = {'subject_ID': np.tile(subject_ID, len(test_run)),
                       'test_run': test_run, 'winning_model': winning_model,
@@ -63,6 +81,28 @@ class TestRealData(unittest.TestCase):  # noqa:D101
         # Check the keys are identical.
         self.assertEqual(sorted(functional_dimensionality(
             all_subjects, 20, self.mask, option=option).keys()),
+            sorted(output.dictionary_full.keys()))
+
+    def test_functional_dimensionality_subject_IDs(self):  # noqa:D102
+        # Create an iterator over the 20 subjects.
+        all_subjects = (self.data[:, :, :, i] for i in range(20))
+        option = 'full'
+
+        # Check the keys are identical.
+        self.assertEqual(sorted(functional_dimensionality(
+            all_subjects, 20, self.mask, option=option,
+            subject_IDs=self.subject_IDs).keys()),
+            sorted(output.dictionary_full.keys()))
+
+    def test_functional_dimensionality_res(self):  # noqa:D102
+        # Create an iterator over the 20 subjects.
+        all_subjects = np.asarray([self.data[:, :, :, i] for i in range(20)])
+        option = 'full'
+        res = np.random.random(all_subjects.shape)
+
+        # Check the keys are identical.
+        self.assertEqual(sorted(functional_dimensionality(
+            all_subjects, 20, self.mask, res=res, option=option).keys()),
             sorted(output.dictionary_full.keys()))
 
     def test_full_values(self):  # noqa:D102
@@ -113,15 +153,6 @@ class TestSimData(unittest.TestCase):  # noqa:D101
         self.mask = np.ones((mask_dim, mask_dim, mask_dim), dtype='bool')
         self.data = demo_data(nvoxels=self.nvoxels, nsubs=self.nsubs,
                               functional_dims=5, nconditions=16)
-
-    def test_covdiag(self):  # noqa:D102
-        data = self.data[0][0]
-        self.assertEqual(covdiag(data).shape, (self.nsubs, self.nsubs))
-
-    def test_pre_proc(self):  # noqa:D102
-        data = self.data[0]
-        res = np.random.random(data.shape)
-        self.assertEqual(pre_proc(data, res).shape, data.shape)
 
     def test_full(self):  # noqa:D102
         for d in range(1, 10):
@@ -194,9 +225,8 @@ class TestCrossVal(unittest.TestCase):  # noqa:D101
                 # Find the correlations between reconstructions of the training
                 # set for each possible dimensionality and the test set.
                 for comp in range(n_comp):
-                    rmat[comp, j_val, i_test] = \
-                        reconstruct(Uval, Sval, Vval, comp,
-                                    data_val[:, :, j_val])
+                    rmat[comp, j_val, i_test] = reconstruct(Uval, Sval, Vval, comp,
+                                                            data_val[:, :, j_val])
                     cor = rmat[comp, j_val, i_test]
                     s_red = np.copy(Sval)
                     # Set higher-dimensional components to zero.
