@@ -23,24 +23,24 @@ import os
 from scipy.io import loadmat
 
 
-def load_spm(spm_path):
+def load_spm(spm_path):  # pragma: no cover
     """Load SPM file."""
     return loadmat('/'.join([spm_path, 'SPM.mat']))['SPM']
 
 
-def spm_beta_files(spm, path):
+def spm_beta_files(spm, path):  # pragma: no cover
     """SPM beta files."""
     vbeta = spm['Vbeta'][0][0]['fname'][0]
     return ['/'.join([path, b[0]]) for b in vbeta]
 
 
-def spm_beta_images(beta_files):
+def spm_beta_images(beta_files):  # pragma: no cover
     """SPM beta images."""
     for image in map(nib.load, beta_files):
         yield image
 
 
-def load_brain(spm_path):
+def load_brain(spm_path):  # pragma: no cover
     """Load brain."""
     spm = load_spm(spm_path)
 
@@ -64,7 +64,7 @@ def load_brain(spm_path):
     return np.reshape(brain, new_shape)[:, 0:n_conditions, :]
 
 
-def brains_from_spm(subject_path):
+def brains_from_spm(subject_path):  # pragma: no cover
     """Brains from SPM."""
     subject_dirs = sorted(os.listdir(subject_path))
     subject_spmpaths = ['/'.join([subject_path, d]) for d in subject_dirs]
@@ -74,7 +74,7 @@ def brains_from_spm(subject_path):
     return n_subjects, map(load_brain, subject_spmpaths)
 
 
-def load_mask(mask_file):
+def load_mask(mask_file):  # pragma: no cover
     """Load mask."""
     return nib.load(mask_file).get_data() > 0
 

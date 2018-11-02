@@ -138,9 +138,6 @@ def svd_nested_crossval(data, subject_ID, option='full'):
                 test_correlation[j_val, i_test] = \
                     reconstruct(
                         U, S, V, winning_model[j_val, i_test], data_test)
-            elif option != 'mean':
-                raise ValueError('Unknown option: "' + str(option) +
-                                 '"; "full" and "mean" are the only options.')
 
         if option == 'mean':
             test_run.append(i_test + 1)

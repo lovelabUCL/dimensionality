@@ -38,7 +38,6 @@ class TestRealData(unittest.TestCase):  # noqa:D101
 
     def test_svd_nested_crossval_error(self):  # noqa:D102
         data = self.data[0]
-        res = np.random.random(data.shape)
         # Check the keys are identical.
         self.assertRaises(ValueError,
                           svd_nested_crossval, data, self.subject_IDs,
@@ -233,8 +232,9 @@ class TestCrossVal(unittest.TestCase):  # noqa:D101
                 # Find the correlations between reconstructions of the training
                 # set for each possible dimensionality and the test set.
                 for comp in range(n_comp):
-                    rmat[comp, j_val, i_test] = reconstruct(Uval, Sval, Vval, comp,
-                                                            data_val[:, :, j_val])
+                    rmat[comp, j_val, i_test] =\
+                        reconstruct(Uval, Sval, Vval, comp,
+                                    data_val[:, :, j_val])
                     cor = rmat[comp, j_val, i_test]
                     s_red = np.copy(Sval)
                     # Set higher-dimensional components to zero.
@@ -244,6 +244,12 @@ class TestCrossVal(unittest.TestCase):  # noqa:D101
                     correlation, _ = pearsonr(
                         reconstruction.ravel(), data_val[:, :, j_val].ravel())
                     self.assertEqual(cor, correlation)
+
+
+class TestUtils(unittest.TestCase):  # noqa:D101
+    def test_demo_data(self):  # noqa:D102
+        self.assertRaises(ValueError, demo_data, nvoxels=100)
+
 
 if __name__ == '__main__':
     unittest.main()
