@@ -63,7 +63,7 @@ def covdiag(x, df=None):
         1.0 / (n * df) * (sample**2).sum()
 
     r2_by_d = r2 / d
-    if np.isnan(r2_by_d):
+    if np.isnan(r2_by_d):  # pragma: no cover
         r2_by_d = 1.0
 
     shrinkage = np.max([0, np.min([1.0, r2_by_d])])
