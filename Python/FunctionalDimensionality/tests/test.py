@@ -36,13 +36,21 @@ class TestRealData(unittest.TestCase):  # noqa:D101
         res = np.random.random(data.shape)
         self.assertEqual(pre_proc(data, res).shape, data.shape)
 
+    def test_svd_nested_crossval_error(self):  # noqa:D102
+        data = self.data[0]
+        res = np.random.random(data.shape)
+        # Check the keys are identical.
+        self.assertRaises(ValueError,
+                          svd_nested_crossval, data, self.subject_IDs,
+                          option='oops')
+
     def test_roi_estimator_res(self):  # noqa:D102
         data = self.data[0]
         res = np.random.random(data.shape)
-        roi_output = roi_estimator(data, res, self.subject_IDs, option='full')
+        roi_output = roi_estimator(data, res, self.subject_IDs, option='mean')
         subject_ID, test_run, winning_model, test_correlation =\
             svd_nested_crossval(pre_proc(data, res), self.subject_IDs,
-                                option='full')
+                                option='mean')
         svd_output = {'subject_ID': np.tile(subject_ID, len(test_run)),
                       'test_run': test_run, 'winning_model': winning_model,
                       'test_correlation': test_correlation}

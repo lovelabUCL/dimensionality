@@ -154,8 +154,5 @@ def svd_nested_crossval(data, subject_ID, option='full'):
 
             test_correlation[i_test] = \
                 reconstruct(U, S, V, winning_model[i_test], data_test)
-        elif option != 'full':
-            raise ValueError('Unknown option: "' + str(option) +
-                             '"; "full" and "mean" are the only options.')
 
     return (subject_ID, test_run, winning_model + 1, test_correlation)
