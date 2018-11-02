@@ -97,7 +97,7 @@ class TestRealData(unittest.TestCase):  # noqa:D101
 
         # Check the keys are identical.
         self.assertEqual(sorted(functional_dimensionality(
-            all_subjects, 20, self.mask, option=option,
+            all_subjects, 20, self.mask, res=None, option=option,
             subject_IDs=self.subject_IDs).keys()),
             sorted(output.dictionary_full.keys()))
 
