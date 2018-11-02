@@ -38,7 +38,7 @@ def covdiag(x, df=None):
     Returns
     -------
         Invertible covariance matrix estimator as an n * n Numpy array,
-        accroding to the optimal shrikage method as outline in Ledoit& Wolf
+        accroding to the optimal shrikage method as outline in Ledoit & Wolf
         (2005).
 
     """
