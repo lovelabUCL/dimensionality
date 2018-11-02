@@ -44,7 +44,7 @@ def covdiag(x, df=None):
     """
     t, n = x.shape
 
-    if df is None:
+    if df is None:  # pragma: no cover
         df = t - 1
 
     # De-mean returns.
