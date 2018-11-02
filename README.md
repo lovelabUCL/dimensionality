@@ -20,7 +20,9 @@
 
 # Functional Dimensionality
 
-[![Build Status](https://travis-ci.org/lovelabUCL/dimensionality.svg?branch=master)](https://travis-ci.org/lovelabUCL/dimensionality) [![codecov](https://codecov.io/gh/lovelabUCL/dimensionality/branch/master/graph/badge.svg)](https://codecov.io/gh/lovelabUCL/dimensionality)
+[![Build Status](https://travis-ci.org/lovelabUCL/dimensionality.svg?branch=master)](https://travis-ci.org/lovelabUCL/dimensionality) [![codecov](https://codecov.io/gh/lovelabUCL/dimensionality/branch/master/graph/badge.svg)](https://codecov.io/gh/lovelabUCL/dimensionality) [![GitHub license](https://img.shields.io/github/license/lovelabUCL/dimensionality.svg)](https://github.com/lovelabUCL/dimensionality/blob/master/LICENSE)
+
+
 
 ## Authors
 
