@@ -14,7 +14,7 @@ nibabel == 2.3.0
 # funcdim/funcdim.py: 23
 # funcdim/util.py: 21
 # tests/output.py: 2,3
-# tests/test.py: 5
+# tests/test.py: 11
 numpy == 1.11.0
 
 # demos/demo_real_data.py: 10
@@ -27,4 +27,5 @@ pandas == 0.19.1
 # funcdim/crossval.py: 21
 # funcdim/funcdim.py: 24
 # funcdim/util.py: 23
+# tests/test.py: 13
 scipy == 0.17.0

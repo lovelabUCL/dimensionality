@@ -6,7 +6,7 @@
   - [Authors](#authors)
   - [Overview](#overview)
   - [Citation](#citation)
-  - [MATLAB](#matlab)
+  - [Matlab](#matlab)
     - [Requirements](#requirements)
     - [Usage](#usage)
     - [Demo](#demo)
@@ -49,13 +49,13 @@ Please cite this paper if you use this software (also see [CITATION.cff](https:/
 -   **Estimating the functional dimensionality of neural representations**
     Ahlheim, C. & [Love, B.C.](http://bradlove.org) (2018). [Estimating the functional dimensionality of neural representations](https://www.sciencedirect.com/science/article/pii/S1053811918305226). Neuroimage, DOI: [10.1016/j.neuroimage.2018.06.015](https://doi.org/10.1016/j.neuroimage.2018.06.015).
 
-## MATLAB
+## Matlab
 
 ### Requirements
 
 -   [SPM12](http://www.fil.ion.ucl.ac.uk/spm/software/spm12/).
 -   [The RSA-toolbox](https://www.mrc-cbu.cam.ac.uk/methods-and-resources/toolboxes/).
--   [Matlab Stan](http://mc-stan.org/users/interfaces/matlab-stan) (only needed to run the hierarchical model).
+-   [Matlab Stan](http://mc-stan.org/users/interfaces/Matlab-stan) (only needed to run the hierarchical model).
 -   Model comparison could be done using [PSIS](https://github.com/avehtari/PSIS).
 -   The `covdiag` function from [https://github.com/jooh/pilab](https://github.com/jooh/pilab) (shrinkage of the residual covariance matrix during pre-whitening).
 
@@ -74,7 +74,7 @@ This function returns the following variables:
 
 A small (&lt;1Mb) amount of simulated data with nominal dimensionality 4 for 64 voxels and 6 sessions for 20 subjects is provided in the `./Matlab/demo_data` directory, along with a 4x4x4 mask with all voxels set to "true". This can be used as follows:
 
-```matlab
+```Matlab
 clear all; close all; clc;
 
 matfile = load('demo_data/sample_data.mat');
