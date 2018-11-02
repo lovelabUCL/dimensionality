@@ -5,6 +5,8 @@ from funcdim.crossval import reconstruct
 from funcdim.funcdim import covdiag
 from funcdim.funcdim import functional_dimensionality
 from funcdim.funcdim import pre_proc
+from funcdim.funcdim import roi_estimator
+from funcdim.funcdim import svd_nested_crossval
 from funcdim.util import demo_data
 import numpy as np
 import output
@@ -23,14 +25,35 @@ class TestRealData(unittest.TestCase):  # noqa:D101
         # Create a 4*4*4 mask (all True) for the 64 voxels.
         self.mask = np.ones((4, 4, 4), dtype='bool')
 
+        self.subject_IDs = [str(i) for i in range(1, self.nsubs + 1)]
+
     def test_covdiag(self):  # noqa:D102
         data = self.data[0][0]
-        self.assertTrue(covdiag(data).shape == (self.nsubs, self.nsubs))
+        self.assertEqual(covdiag(data).shape, (self.nsubs, self.nsubs))
 
     def test_pre_proc(self):  # noqa:D102
         data = self.data[0]
         res = np.random.random(data.shape)
-        self.assertTrue(pre_proc(data, res).shape == data.shape)
+        self.assertEqual(pre_proc(data, res).shape, data.shape)
+
+    def test_roi_estimator(self):  # noqa:D102
+        data = self.data[0]
+        res = np.random.random(data.shape)
+        roi_output = roi_estimator(data, res, self.subject_IDs, option='full')
+        subject_ID, test_run, winning_model, test_correlation =\
+            svd_nested_crossval(pre_proc(data, res), self.subject_IDs,
+                                option='full')
+        svd_output = {'subject_ID': np.tile(subject_ID, len(test_run)),
+                      'test_run': test_run, 'winning_model': winning_model,
+                      'test_correlation': test_correlation}
+        # Check the keys are identical.
+        self.assertEqual(sorted(roi_output.keys()), sorted(svd_output.keys()))
+        # Loop through to compare the contents of both dictionaries:
+        for (key, value) in roi_output.items():
+            if key == 'subject_ID':
+                self.assertTrue((value == svd_output[key]).all())
+            else:
+                self.assertTrue(np.allclose(value, svd_output[key]))
 
     def test_full_keys(self):  # noqa:D102
         # Create an iterator over the 20 subjects.
@@ -93,12 +116,12 @@ class TestSimData(unittest.TestCase):  # noqa:D101
 
     def test_covdiag(self):  # noqa:D102
         data = self.data[0][0]
-        self.assertTrue(covdiag(data).shape == (self.nsubs, self.nsubs))
+        self.assertEqual(covdiag(data).shape, (self.nsubs, self.nsubs))
 
     def test_pre_proc(self):  # noqa:D102
         data = self.data[0]
         res = np.random.random(data.shape)
-        self.assertTrue(pre_proc(data, res).shape == data.shape)
+        self.assertEqual(pre_proc(data, res).shape, data.shape)
 
     def test_full(self):  # noqa:D102
         for d in range(1, 10):
